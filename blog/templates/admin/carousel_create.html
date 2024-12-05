@@ -1,0 +1,29 @@
+{% extends 'admin/index.html' %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-light text-dark">
+        <h3 class="card-title m-0">Create New Carousel</h3>
+    </div>
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="d-flex justify-content-between">
+                <div>
+                    <button type="submit" class="btn btn-info btn-sm">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                </div>
+                <div>
+                    <a href="{% url 'carousel_list' %}" class="btn btn-light btn-sm text-dark font-weight-bold">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+

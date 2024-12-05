@@ -1,0 +1,49 @@
+{% extends 'admin/index.html' %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+        <h3 class="card-title m-0">List of Banners</h3>
+        <a href="{% url 'banner_create' %}" class="btn btn-light btn-sm text-primary font-weight-bold">
+            <i class="fas fa-plus"></i> Create New Banner
+        </a>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th><i class="fas fa-hashtag"></i> ID</th>
+                    <th><i class="fas fa-bookmark"></i> Main</th>
+                    <th><i class="fas fa-heading"></i> Title</th>
+                    <th><i class="fas fa-align-left"></i> Text</th>
+                    <th><i class="fas fa-calendar-alt"></i> Last</th>
+                    <th class="text-center"><i class="fas fa-cogs"></i> Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for banner in banners %}
+                <tr>
+                    <td>{{ banner.id }}</td>
+                    <td>{{ banner.main }}</td>
+                    <td>{{ banner.title }}</td>
+                    <td>{{ banner.text|truncatewords:10 }}</td>
+                    <td>{{ banner.last }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'banner_update' banner.pk %}" class="btn btn-sm btn-outline-info" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'banner_delete' banner.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No banners available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

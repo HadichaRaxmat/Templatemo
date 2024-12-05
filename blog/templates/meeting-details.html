@@ -1,0 +1,100 @@
+{% include 'header.html' %}
+{% load static %}
+
+<section class="heading-page header-text" id="top">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          {% for l in last %}
+          <h6>{{ l.title }}</h6>
+          <h2>{{ l.text }}</h2>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<section class="meetings-page" id="meetings">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="meeting-single-item">
+                <div class="thumb">
+                  <div class="price">
+                    {% for d in detail %}
+                    <span>{{ d.price }}</span>
+                    {% endfor %}
+                  </div>
+                  <div class="date">
+                    {% for d in detail %}
+                    <h6>{{ d.month }} <span>{{ d.day }}</span></h6>
+                    {% endfor %}
+                  </div>
+                  <a href="/meeting/details"><img src="{% static 'assets/images/single-meeting.jpg' %}" alt=""></a>
+                </div>
+                <div class="down-content">
+                  {% for d in detail %}
+                  <a href="/meeting/details"><h4>{{ d.head }}</h4></a>
+                  <p>{{ d.title }}</p>
+                  <p> {{ d.text }} </p>
+                  {% endfor %}
+                  <div class="row">
+                    <div class="col-lg-4">
+                      <div class="hours">
+                        <h5>Hours</h5>
+                        {% for d in detail %}
+                        <p>{{ d.hours }}</p>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="location">
+                        <h5>Location</h5>
+                        {% for d in detail %}
+                        <p>{{ d.locations }}</p>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="book now">
+                        <h5>Book Now</h5>
+                        {% for d in detail %}
+                        <p>{{ d.contact }}</p>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="share">
+                        <h5>Share:</h5>
+                        <ul>
+                          {% for d in detail %}
+                          <li><a href="#">{{ d.share }}</a>,</li>
+                          {% endfor %}
+                          <li><a href="#">Twitter</a>,</li>
+                          <li><a href="#">Linkedin</a>,</li>
+                          <li><a href="#">Behance</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="main-button-red">
+                {% for d in detail %}
+                <a href="/meetings">{{ d.last }}</a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include 'footer.html' %}
+  </section>
+
+{% include 'footer.html' %}

@@ -1,0 +1,48 @@
+{% extends 'admin/index.html' %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+        <h3 class="card-title m-0">List of Popular</h3>
+        <a href="{% url 'popular_create' %}" class="btn btn-light btn-sm text-primary font-weight-bold">
+            <i class="fas fa-plus"></i> Create New Popular
+        </a>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th><i class="fas fa-hashtag"></i> ID</th>
+                    <th><i class="fas fa-text-width"></i> Title</th>
+                    <th><i class="fas fa-paragraph"></i> Text</th>
+                    <th><i class="fas fa-dollar-sign"></i> Price</th>
+                    <th class="text-center"><i class="fas fa-cogs"></i> Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pop in popular %}
+                    <tr>
+                        <td>{{ pop.id }}</td>
+                        <td>{{ pop.title }}</td>
+                        <td>{{ pop.text|truncatewords:10 }}</td>
+                        <td>{{ pop.price }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'popular_update' pop.pk %}" class="btn btn-sm btn-outline-info" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'popular_delete' pop.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No popular items found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

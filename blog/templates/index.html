@@ -1,0 +1,287 @@
+{% include 'header.html' %}
+{% load static %}
+<body>
+<!-- ***** Main Banner Area Start ***** -->
+  <section class="section main-banner" id="top" data-section="section1">
+      <video autoplay muted loop id="bg-video">
+          <source src="{% static 'assets/images/course-video.mp4' %}" type="video/mp4" />
+      </video>
+
+      <div class="video-overlay header-text">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+                {% for banner in banners %}
+                <div class="caption">
+              <h6>{{ banner.main }}</h6>
+              <h2>{{ banner.title }}</h2>
+              <p>{{ banner.text }}</p>
+              <div class="main-button-red">
+                  <div class="scroll-to-section"><a href="#contact">{{ banner.last }}</a></div>
+              </div>
+          </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+      </div>
+  </section>
+<!-- ***** Main Banner Area End ***** -->
+
+  <section class="services">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="owl-service-item owl-carousel">
+            <div class="item">
+              <div class="icon">
+                {% for carousel in carousels %}
+                <img src="{% static 'assets/images/service-icon-01.png' %}" alt="">
+              </div>
+              <div class="down-content">
+                <h4>{{ carousel.title }}}</h4>
+                <p>{{ carousel.text }}</p>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="upcoming-meetings" id="meetings">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          {% for meeting in meetings %}
+          <div class="section-heading">
+            <h2>{{ meeting.heading }}</h2>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="categories">
+            <h4>{{ meeting.title }}</h4>
+            <ul>
+              <li><a href="#">{{ meeting.category }}</a></li>
+            </ul>
+            <div class="main-button-red">
+              <a href="meetings.html">{{ meeting.invitation }}</a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="col-lg-8">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="meeting-item">
+                {% for meeting in meetings %}
+                <div class="thumb">
+                  <div class="price">
+                    <span>{{ meeting.price }}</span>
+                  </div>
+                  <a href="/meeting/details"><img src="{% static 'assets/images/meeting-01.jpg' %}" alt="New Lecturer Meeting"></a>
+                </div>
+                <div class="down-content">
+                  <div class="date">
+                    <h6>{{ meeting.month }} <span>{{ meeting.day }}</span></h6>
+                  </div>
+                  <a href="/meeting/details"><h4>{{ meeting.division }}</h4></a>
+                  <p>{{ meeting.first_text }}<br>{{ meeting.second_text }}</p>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="apply-now" id="apply">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 align-self-center">
+          <div class="row">
+            <div class="col-lg-12">
+              {% for middle in middles %}
+              <div class="item">
+                <h3>{{ middle.title }}</h3>
+                <p>{{ middle.text }}</p>
+                <div class="main-button-red">
+                  <div class="scroll-to-section"><a href="#contact">{{ middle.last }}</a></div>
+              </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="accordions is-first-expanded">
+            <article class="accordion">
+                <div class="accordion-head">
+                  {% for ab in about %}
+                    <span>{{ ab.title }}</span>
+                    <span class="icon">
+                        <i class="icon fa fa-chevron-right"></i>
+                    </span>
+                </div>
+                <div class="accordion-body">
+                    <div class="content">
+                        <p>{{ ab.text }}</p>
+                    </div>
+                  {% endfor %}
+                </div>
+            </article>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="our-courses" id="courses">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          {% for p in popular %}
+          <div class="section-heading">
+            <h2>{{ p.title }}</h2>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="owl-courses-item owl-carousel">
+            <div class="item">
+              <img src="{% static 'assets/images/course-01.jpg' %}" alt="Course One">
+              <div class="down-content">
+                <h4>{{ p.text }}</h4>
+                <div class="info">
+                  <div class="row">
+                    <div class="col-8">
+                      <ul>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                        <li><i class="fa fa-star"></i></li>
+                      </ul>
+                    </div>
+                    <div class="col-4">
+                       <span>{{ p.price }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="our-facts">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="row">
+            <div class="col-lg-12">
+              {% for fact in facts %}
+              <h2>{{ fact.title }}</h2>
+            </div>
+            <div class="col-lg-6">
+              <div class="row">
+                <div class="col-12">
+                  <div class="count-area-content percentage">
+                    <div class="count-digit">{{ fact.indicator }}</div>
+                    <div class="count-title">{{ fact.text }}</div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div> 
+        <div class="col-lg-6 align-self-center">
+          <div class="video">
+            <a href="https://www.youtube.com/watch?v=HndV87XpkWg" target="_blank"><img src="{% static 'assets/images/play-icon.png' %}" alt=""></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-us" id="contact">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-9 align-self-center">
+          <div class="row">
+            <div class="col-lg-12">
+              <form id="contact" action="contact/" method="post">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-lg-12">
+                    {% for c in contact %}
+                    <h2>{{ c.title }}</h2>
+                    {% endfor %}
+                  </div>
+                  <div class="col-lg-4">
+                    <fieldset>
+                      <input name="name" type="text" id="name" placeholder="YOURNAME...*" required="">
+                    </fieldset>
+                  </div>
+                  <div class="col-lg-4">
+                    <fieldset>
+                    <input name="email" type="text" id="email" pattern="[^ @]*@[^ @]*" placeholder="YOUR EMAIL..." required="">
+                  </fieldset>
+                  </div>
+                  <div class="col-lg-4">
+                    <fieldset>
+                      <input name="phone" type="text" id="phone" placeholder="PHONE NUMBER...*" required="">
+                    </fieldset>
+                  </div>
+                  <div class="col-lg-12">
+                    <fieldset>
+                      <textarea name="message" type="text" class="form-control" id="message" placeholder="YOUR MESSAGE..." required=""></textarea>
+                    </fieldset>
+                  </div>
+                  <div class="col-lg-12">
+                    {% for c in contact %}
+                    <fieldset>
+                      <button type="submit" id="form-submit" class="button">{{ c.last }}</button>
+                    </fieldset>
+                    {% endfor %}
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          {% for t in touch %}
+          <div class="right-info">
+            <ul>
+              <li>
+                <h6>{{ t.first_method }}</h6>
+                <span>{{ t.first }}</span>
+              </li>
+              <li>
+                <h6>{{ t.second_method }}</h6>
+                <span>{{ t.second }}</span>
+              </li>
+              <li>
+                <h6>{{ t.third_method }}</h6>
+                <span>{{ t.third }}</span>
+              </li>
+              <li>
+                <h6>{{ t.fourth_method }}</h6>
+                <span>{{ t.fourth }}</span>
+              </li>
+            </ul>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% include 'footer.html' %}
+  </section>
+</body>

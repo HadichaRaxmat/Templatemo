@@ -1,0 +1,51 @@
+{% extends 'admin/index.html' %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+        <h3 class="card-title m-0">List of MiddleSecond</h3>
+        <a href="{% url 'middlesecond_create' %}" class="btn btn-light btn-sm text-primary font-weight-bold">
+            <i class="fas fa-plus"></i> Create New MiddleSecond
+        </a>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th><i class="fas fa-hashtag"></i> ID</th>
+                    <th><i class="fas fa-text-width"></i> Title</th>
+                    <th><i class="fas fa-list"></i> Category</th>
+                    <th><i class="fas fa-tag"></i> Price</th>
+                    <th><i class="fas fa-calendar-alt"></i> Month</th>
+                    <th><i class="fas fa-calendar-day"></i> Day</th>
+                    <th class="text-center"><i class="fas fa-cogs"></i> Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for middlesecond in middleseconds %}
+                <tr>
+                    <td>{{ middlesecond.id }}</td>
+                    <td>{{ middlesecond.title }}</td>
+                    <td>{{ middlesecond.category }}</td>
+                    <td>{{ middlesecond.price }}</td>
+                    <td>{{ middlesecond.month }}</td>
+                    <td>{{ middlesecond.day }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'middlesecond_update' middlesecond.id %}" class="btn btn-sm btn-outline-info" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'middlesecond_delete' middlesecond.id %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">No MiddleSecond entries found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

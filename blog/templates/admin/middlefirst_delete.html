@@ -1,0 +1,27 @@
+{% extends 'admin/index.html' %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-light text-dark">
+        <h3 class="card-title m-0">Delete MiddleFirst</h3>
+    </div>
+    <div class="card-body">
+        <h5 class="text-danger">Are you sure you want to delete MiddleFirst ID: {{ middlefirst.id }} ?</h5>
+        <p>
+            <strong>Title:</strong> {{ middlefirst.title }} <br>
+            <strong>Text:</strong> {{ middlefirst.text }}
+        </p>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt"></i> yes, Delete
+                </button>
+                <a href="{% url 'middlefirst_list' %}" class="btn btn-light btn-sm text-dark font-weight-bold">
+                    <i class="fas fa-arrow-left"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
