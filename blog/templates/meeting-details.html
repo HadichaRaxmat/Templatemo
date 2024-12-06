@@ -54,7 +54,7 @@
                       <div class="location">
                         <h5>Location</h5>
                         {% for d in detail %}
-                        <p>{{ d.locations }}</p>
+                        <p>{{ d.location }}</p>
                         {% endfor %}
                       </div>
                     </div>
@@ -71,11 +71,8 @@
                         <h5>Share:</h5>
                         <ul>
                           {% for d in detail %}
-                          <li><a href="#">{{ d.share }}</a>,</li>
+                          <li><a href="#">{{ d.share }}</a></li>
                           {% endfor %}
-                          <li><a href="#">Twitter</a>,</li>
-                          <li><a href="#">Linkedin</a>,</li>
-                          <li><a href="#">Behance</a></li>
                         </ul>
                       </div>
                     </div>
