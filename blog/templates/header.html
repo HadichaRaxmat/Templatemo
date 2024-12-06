@@ -64,20 +64,22 @@ https://templatemo.com/tm-569-edu-meeting
                       <!-- ***** Logo End ***** -->
                       <!-- ***** Menu Start ***** -->
                       <ul class="nav">
-                          <li class="scroll-to-section"><a href="/" class="active">Home</a></li>
                           {% for head in header %}
-                          <li><a href="/meetings">{{ head.menu }}</a></li>
+                          <li class="scroll-to-section"><a href="/" class="active">{{ head.menu }}</a></li>
                           {% endfor %}
-                          <li class="scroll-to-section"><a href="#apply">Apply Now</a></li>
+                          {% for head in header %}
+                          <li><a href="/meetings"></a></li>
+                          {% endfor %}
+                          <li class="scroll-to-section"><a href="#apply">Подать заявку</a></li>
                           <li class="has-sub">
-                              <a href="javascript:void(0)">Pages</a>
+                              <a href="javascript:void(0)">Страницы</a>
                               <ul class="sub-menu">
-                                  <li><a href="/meetings">Upcoming Meetings</a></li>
-                                  <li><a href="/meeting/details">Meeting Details</a></li>
+                                  <li><a href="/meetings">Предстоящие встречи</a></li>
+                                  <li><a href="/meeting/details">Детали встречи</a></li>
                               </ul>
                           </li>
-                          <li class="scroll-to-section"><a href="#courses">Courses</a></li>
-                          <li class="scroll-to-section"><a href="#contact">Contact Us</a></li>
+                          <li class="scroll-to-section"><a href="#courses">Курсы</a></li>
+                          <li class="scroll-to-section"><a href="#contact">Контакты</a></li>
                       </ul>
                       <a class='menu-trigger'>
                           <span>Menu</span>
