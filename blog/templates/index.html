@@ -39,7 +39,7 @@
                 <img src="{% static 'assets/images/service-icon-01.png' %}" alt="">
               </div>
               <div class="down-content">
-                <h4>{{ carousel.title }}}</h4>
+                <h4>{{ carousel.title }}</h4>
                 <p>{{ carousel.text }}</p>
                 {% endfor %}
               </div>
@@ -66,7 +66,7 @@
               <li><a href="#">{{ meeting.category }}</a></li>
             </ul>
             <div class="main-button-red">
-              <a href="meetings.html">{{ meeting.invitation }}</a>
+              <a href="/meetings">{{ meeting.invitation }}</a>
             </div>
           </div>
           {% endfor %}
@@ -143,17 +143,17 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          {% for p in popular %}
           <div class="section-heading">
-            <h2>{{ p.title }}</h2>
+            <h2>Наши популярные курсы</h2>
           </div>
         </div>
         <div class="col-lg-12">
           <div class="owl-courses-item owl-carousel">
+            {% for pop in popular %}
             <div class="item">
               <img src="{% static 'assets/images/course-01.jpg' %}" alt="Course One">
               <div class="down-content">
-                <h4>{{ p.text }}</h4>
+                <h4>{{ pop.text }}</h4>
                 <div class="info">
                   <div class="row">
                     <div class="col-8">
@@ -166,14 +166,14 @@
                       </ul>
                     </div>
                     <div class="col-4">
-                       <span>{{ p.price }}</span>
+                       <span>{{ pop.price }}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            {% endfor %}
           </div>
-          {% endfor %}
         </div>
       </div>
     </div>
@@ -191,7 +191,7 @@
             <div class="col-lg-6">
               <div class="row">
                 <div class="col-12">
-                  <div class="count-area-content percentage">
+                  <div class="count-area-content new-students">
                     <div class="count-digit">{{ fact.indicator }}</div>
                     <div class="count-title">{{ fact.text }}</div>
                   </div>
