@@ -57,7 +57,7 @@ class PopularForm(forms.ModelForm):
 class FactForm(forms.ModelForm):
     class Meta:
         model = Fact
-        fields = ['title', 'indicator', 'text', 'last']
+        fields = ['title', 'indicator', 'text']
 
 
 class TouchForm(forms.ModelForm):
