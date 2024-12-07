@@ -1,9 +1,8 @@
-from django.urls import path
-from .views import (home_view, meetings_view, meeting_details_view, HeaderCreateApiView,
-                    BannerCreateApiView, CarouselCreateApiView, MeetingCreateApiView,
-                    MiddleCreateApiView, AboutCreateApiView, PopularCreateApiView, FactCreateApiView,
-                    TouchCreateApiView, EndCreateApiView, MiddleSecondCreateApiView, MiddleFirstCreateApiView,
-                    LastCreateApiView, DetailCreateApiView, header_create, header_update, header_list,
+from django.urls import path, re_path
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
+from .views import (home_view, meetings_view, meeting_details_view, header_create, header_update, header_list,
                     header_delete, banner_list, banner_create, banner_update, banner_delete, carousel_create,
                     carousel_list, carousel_update, carousel_delete, meeting_create, meeting_list, meeting_update,
                     meeting_delete, middle_create, middle_delete, middle_list, middle_update, popular_delete,
@@ -14,11 +13,30 @@ from .views import (home_view, meetings_view, meeting_details_view, HeaderCreate
                     last_update, last_create, detail_update, detail_create, detail_list, detail_delete, about_update,
                     about_list, about_delete, about_create, dashboard2_view, dashboard3_view, iframe_view,
                     contact_create, contact_delete, contact_update, contact_view, contact_list, contact_list_view,
-                    user_contact_update, user_contact_delete)
+                    user_contact_update, user_contact_delete, HeaderListAPIView, HeaderDetailAPIView,
+                    ContactListAPIView, ContactDetailAPIView, BannerListAPIView, BannerDetailAPIView,
+                    CarouselListAPIView, CarouselDetailAPIView, MeetingListAPIView, MeetingDetailAPIView,
+                    MiddleListAPIView, MiddleDetailAPIView, AboutDetailAPIView, AboutListAPIView, PopularListAPIView,
+                    PopularDetailAPIView, FactDetailAPIView,FactListAPIView, TouchDetailAPIView, TouchListAPIView,
+                    EndDetailAPIView, EndListAPIView, MiddleFirstDetailAPIView, MiddleFirstListAPIView,
+                    MiddleSecondListAPIView, MiddleSecondDetailAPIView, LastDetailAPIView, LastListAPIView,
+                    DetailListAPIView, DetailDetailAPIView)
 
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="API Documentation",
+        default_version='v1',
+        description="Документация API для вашего проекта",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="your.email@example.com"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],  # Убедитесь, что разрешения настроены
+)
 
 urlpatterns = [
-
     # HTML
     path('', home_view),
     path('dashboard2/', dashboard2_view),
@@ -30,7 +48,6 @@ urlpatterns = [
     path('user/contact/list/', contact_list_view, name='user_contact_list'),
     path('user/contact/update/<int:pk>/', user_contact_update, name='user_contact_update'),
     path('user/contact/delete/<int:pk>/', user_contact_delete, name='user_contact_delete'),
-
     #contact
     path('contact/create/', contact_create, name='contact_create'),
     path('contact/list/', contact_list, name='contact_list'),
@@ -106,37 +123,47 @@ urlpatterns = [
     path('about/list/', about_list, name='about_list'),
     path('about/update/<int:pk>/', about_update, name='about_update'),
     path('about/delete/<int:pk>/', about_delete, name='about_delete'),
+
+
+
     # API
-    path('api/header/', HeaderCreateApiView.as_view(), name='header-create'), # create
-    path('api/header/<int:header_id>/', HeaderCreateApiView.as_view(), name='header-update'), #update
-    path('api/banner/', BannerCreateApiView.as_view(), name='banner-create'),  # create
-    path('api/banner/<int:banner_id>/', BannerCreateApiView.as_view(), name='banner-update'),#update
-    path('api/carousel/', CarouselCreateApiView.as_view(), name='carousel-create'),  # create
-    path('api/carousel/<int:carousel_id>/', CarouselCreateApiView.as_view(), name='carousel-update'), #update
-    path('api/meeting/', MeetingCreateApiView.as_view(), name='meeting-create'),  # create
-    path('api/meeting/<int:meeting_id>/', MeetingCreateApiView.as_view(), name='meeting-update'), #update
-    path('api/middle/', MiddleCreateApiView.as_view(), name='middle-create'),  # create
-    path('api/middle/<int:middle_id>/', MiddleCreateApiView.as_view(), name='middle-update'), #update
-    path('api/about/', AboutCreateApiView.as_view(), name='about-create'),  # create
-    path('api/about/<int:about_id>/', AboutCreateApiView.as_view(), name='about-update'), #update
-    path('api/popular/', PopularCreateApiView.as_view(), name='popular-create'),   # create
-    path('api/popular/<int:popular_id>/', PopularCreateApiView.as_view(), name='popular-update'), #update
-    path('api/fact/', FactCreateApiView.as_view(), name='fact-create'),  # create
-    path('api/fact/<int:fact_id>/', FactCreateApiView.as_view(), name='fact-update'), #update
-    path('api/touch/', TouchCreateApiView.as_view(), name='touch-create'),  # create
-    path('api/touch/<int:touch_id>/', TouchCreateApiView.as_view(), name='touch-update'), #update
-    path('api/end/', EndCreateApiView.as_view(), name='end-create'),    # create
-    path('api/end/<int:end_id>/', EndCreateApiView.as_view(), name='end-update'), #update
-
-    # middle api
-    path('api/first/', MiddleFirstCreateApiView.as_view(), name='first-create'),  # create
-    path('api/first/<int:first_id>/', MiddleFirstCreateApiView.as_view(), name='first-update'), #update
-    path('api/second/', MiddleSecondCreateApiView.as_view(), name='second-create'),  # create
-    path('api/second/<int:second_id>/', MiddleSecondCreateApiView.as_view(), name='second-update'), #update
-
-    # Last api
-    path('api/last/', LastCreateApiView.as_view(), name='last-create'),  # create
-    path('api/last/<int:last_id>/', LastCreateApiView.as_view(), name='last-update'), #update
-    path('api/detail/', DetailCreateApiView.as_view(), name='detail-create'),  # create
-    path('api/detail/<int:last_id>/', DetailCreateApiView.as_view(), name='detail-update'), #update
+    re_path(r'^swagger(?P<format>\.json|\.yml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('header/', HeaderListAPIView.as_view(), name='header-list'), #header list
+    path('header/<int:pk>/', HeaderDetailAPIView.as_view(), name='header-detail'), #header detail
+    path('contact/', ContactListAPIView.as_view(), name='contact-list'), #contact list
+    path('contact/<int:pk>/', ContactDetailAPIView.as_view(), name='contact-detail'), #contact detail
+    path('banner/', BannerListAPIView.as_view(), name='banner-list'), #banner list
+    path('banner/<int:pk>/', BannerDetailAPIView.as_view(), name='banner-detail'), #banner detail
+    path('carousel/', CarouselListAPIView.as_view(), name='carousel-list'), #carousel list
+    path('carousel/<int:pk>/', CarouselDetailAPIView.as_view(), name='carousel-detail'), #carousel detail
+    path('meeting/', MeetingListAPIView.as_view(), name='meeting-list'), #meeting list
+    path('meeting/<int:pk>/', MeetingDetailAPIView.as_view(), name='meeting-detail'), #meeting detail
+    path('middle/', MiddleListAPIView.as_view(), name='middle-list'),# middle list
+    path('middle/<int:pk>/', MiddleDetailAPIView.as_view(), name='middle-detail'), #middle detail
+    path('about/', AboutListAPIView.as_view(), name='about-list'), #about list
+    path('about/<int:pk>/', AboutDetailAPIView.as_view(), name='about-detail'), #about detail
+    path('popular/', PopularListAPIView.as_view(), name='popular-list'), #popular list
+    path('popular/<int:pk>/', PopularDetailAPIView.as_view(), name='popular-detail'), #popular detail
+    path('fact/', FactListAPIView.as_view(), name='fact-list'),
+    path('fact/<int:pk>/', FactDetailAPIView.as_view(), name='fact-detail'),
+    path('touch/', TouchListAPIView.as_view(), name='touch-list'),
+    path('touch/<int:pk>/', TouchDetailAPIView.as_view(), name='touch-detail'),
+    path('end/', EndListAPIView.as_view(), name='end-list'),
+    path('end/<int:pk>/', EndDetailAPIView.as_view(), name='end-detail'),
+    path('middlefirst/', MiddleFirstListAPIView.as_view(), name='middlefirst-list'),
+    path('middlefirst/<int:pk>/', MiddleFirstDetailAPIView.as_view(), name='middlefirst-detail'),
+    path('middlesecond/', MiddleSecondListAPIView.as_view(), name='middlesecond-list'),
+    path('middlesecond/<int:pk>/', MiddleSecondDetailAPIView.as_view(), name='middlesecond-detail'),
+    path('last/', LastListAPIView.as_view(), name='last-list'),
+    path('last/<int:pk>/', LastDetailAPIView.as_view(), name='last-detail'),
+    path('detail/', DetailListAPIView.as_view(), name='detail-list'),
+    path('detail/<int:pk>/', DetailDetailAPIView.as_view(), name='detail-detail'),
 ]
+
+
+
+
+
+
+

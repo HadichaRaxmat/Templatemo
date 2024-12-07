@@ -12,7 +12,6 @@ class ContactSerializer(serializers.ModelSerializer):
 class HeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Header
-        read_only_fields = ('id' ,)
         fields = ['id', 'logo', 'menu']
 
 
@@ -27,7 +26,7 @@ class CarouselSerializer(serializers.ModelSerializer):
     class Meta:
         model = Carousel
         read_only_fields = ('id' ,)
-        fields = ['id', 'title', 'text', 'photo']
+        fields = ['id', 'title', 'text']
 
 
 class MeetingSerializer(serializers.ModelSerializer):

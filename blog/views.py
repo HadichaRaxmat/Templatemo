@@ -1,14 +1,14 @@
-from django.http import Http404
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView
 from .models import (Header, Banner, Carousel, Meeting, Middle, About, Popular, Fact, Touch, End, MiddleFirst,
                      MiddleSecond, Last, Detail, Contact, UserContact)
-from .serializers import (HeaderSerializer, ContactSerializer, BannerSerializer, CarouselSerializer,
-                          MeetingSerializer, MiddleSerializer, AboutSerializer, PopularSerializer,
-                          FactSerializer, TouchSerializer, EndSerializer, MiddleFirstSerializer,
-                          MiddleSecondSerializer, LastSerializer, DetailSerializer)
+from .serializers import (HeaderSerializer, ContactSerializer, BannerSerializer, CarouselSerializer, MeetingSerializer,
+                          MiddleSerializer, AboutSerializer, PopularSerializer, FactSerializer, TouchSerializer,
+                          EndSerializer, MiddleFirstSerializer, MiddleSecondSerializer, LastSerializer, DetailSerializer)
 from rest_framework.response import Response
-from rest_framework import status
 from .forms import (HeaderForm, BannerForm, CarouselForm, MeetingForm, MiddleForm, AboutForm, PopularForm, FactForm,
                     TouchForm, EndForm, MiddleFirstForm, MiddleSecondForm, LastForm, DetailForm, ContactForm,
                     UserContactForm)
@@ -676,8 +676,99 @@ def about_delete(request, pk):
 
 
 # API
-class ApiContactView(APIView):
-    def post(self, request):
+class HeaderListAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Get all Header items",
+        responses={200: HeaderSerializer(many=True)},
+    )
+    def get(self, request, *args, **kwargs):
+        headers = Header.objects.all()
+        serializer = HeaderSerializer(headers, many=True)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        operation_description="Create a new Header item",
+        request_body=HeaderSerializer,
+        responses={201: HeaderSerializer(many=True)},
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = HeaderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class HeaderDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a Header item",
+        request_body=HeaderSerializer,
+        responses={200: HeaderSerializer(many=True)},
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            header = Header.objects.get(id=kwargs['pk'])
+        except Header.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = HeaderSerializer(header, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        operation_description="Partially update a Header item",
+        request_body=HeaderSerializer,
+        responses={200: HeaderSerializer(many=True)},
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            header = Header.objects.get(id=kwargs['pk'])
+        except Header.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = HeaderSerializer(header, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        operation_description="Delete a Header item",
+        responses={204: 'No Content'},
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            header = Header.objects.get(id=kwargs['pk'])
+        except Header.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        header.delete()  # Удаляем объект
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class ContactListAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Get all Contact items",
+        responses={200: ContactSerializer(many=True)},
+    )
+    def get(self, request, *args, **kwargs):
+        contacts = Contact.objects.all()
+        serializer = ContactSerializer(contacts, many=True)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        operation_description="Create a new Contact item",
+        request_body=ContactSerializer,
+        responses={201: ContactSerializer(many=True)},
+    )
+    def post(self, request, *args, **kwargs):
         serializer = ContactSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -685,635 +776,1029 @@ class ApiContactView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class HeaderCreateApiView(APIView):
-    def get_object(self, header_id):
+class ContactDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+    @swagger_auto_schema(
+        operation_description="Update a Contact item",
+        request_body=ContactSerializer,
+        responses={200: ContactSerializer(many=True)},
+    )
+    def put(self, request, *args, **kwargs):
         try:
-            return Header.objects.get(id=header_id)
-        except Header.DoesNotExist:
-            raise Http404("Header not found")
+            contact = Contact.objects.get(id=kwargs['pk'])
+        except Contact.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    def get(self, **kwargs):
-        header_id = kwargs.get('header_id')
-        header = self.get_object(header_id)
-        serializer = HeaderSerializer(header)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        serializer = HeaderSerializer(data=request.data)
+        serializer = ContactSerializer(contact, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        header_id = kwargs.get('header_id')
-        header = self.get_object(header_id)
-        serializer = HeaderSerializer(header, data=request.data)
+    @swagger_auto_schema(
+        operation_description="Partially update a Contact item",
+        request_body=ContactSerializer,
+        responses={200: ContactSerializer(many=True)},
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            contact = Contact.objects.get(id=kwargs['pk'])
+        except Contact.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ContactSerializer(contact, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        header_id = kwargs.get('header_id')
-        header = self.get_object(header_id)
-        serializer = HeaderSerializer(header, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    @swagger_auto_schema(
+        operation_description="Delete a Contact item",
+        responses={204: 'No Content'},
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            contact = Contact.objects.get(id=kwargs['pk'])
+        except Contact.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, request, **kwargs):
-        header_id = kwargs.get('header_id')
-        header = self.get_object(header_id)
-        header.delete()
+        contact.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class BannerCreateApiView(APIView):
-    def get_object(self, banner_id):
-        try:
-            return Banner.objects.get(id=banner_id)
-        except Banner.DoesNotExist:
-            raise Http404("Not found")
 
-    def get(self, **kwargs):
-        banner_id = kwargs.get('banner_id')
-        banner = self.get_object(banner_id)
-        serializer = BannerSerializer(banner)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class BannerListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Получить все баннеры",
+        responses={200: BannerSerializer(many=True)},  # Ответ с сериализатором для списка баннеров
+    )
+    def get(self, request, *args, **kwargs):
+        banners = Banner.objects.all()
+        serializer = BannerSerializer(banners, many=True)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        operation_description="Создать новый баннер",
+        request_body=BannerSerializer,
+        responses={201: BannerSerializer(many=True)},
+    )
+    def post(self, request, *args, **kwargs):
         serializer = BannerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        banner_id = kwargs.get('banner_id')
-        banner = self.get_object(banner_id)
+class BannerDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Обновить баннер",
+        request_body=BannerSerializer,
+        responses={200: BannerSerializer(many=True)},
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            banner = Banner.objects.get(id=kwargs['pk'])
+        except Banner.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = BannerSerializer(banner, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        banner_id = kwargs.get('banner_id')
-        banner = self.get_object(banner_id)
+    @swagger_auto_schema(
+        operation_description="Частичное обновление баннера",
+        request_body=BannerSerializer,
+        responses={200: BannerSerializer(many=True)},
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            banner = Banner.objects.get(id=kwargs['pk'])
+        except Banner.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = BannerSerializer(banner, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        banner_id = kwargs.get('banner_id')
-        banner = self.get_object(banner_id)
+    @swagger_auto_schema(
+        operation_description="Удалить баннер",
+        responses={204: 'No Content'},
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            banner = Banner.objects.get(id=kwargs['pk'])
+        except Banner.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         banner.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CarouselCreateApiView(APIView):
-    def get_object(self, carousel_id):
-        try:
-            return Carousel.objects.get(id=carousel_id)
-        except Carousel.DoesNotExist:
-            raise Http404("Not found")
+class CarouselListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        carousel_id = kwargs.get('carousel_id')
-        carousel = self.get_object(carousel_id)
-        serializer = CarouselSerializer(carousel)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Получить все элементы Carousel",
+        responses={200: CarouselSerializer(many=True)},  # Ответ с сериализатором для списка каруселей
+    )
+    def get(self, request, *args, **kwargs):
+        carousels = Carousel.objects.all()
+        serializer = CarouselSerializer(carousels, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Создать новый элемент Carousel",
+        request_body=CarouselSerializer,
+        responses={201: CarouselSerializer(many=True)},
+    )
+    def post(self, request, *args, **kwargs):
         serializer = CarouselSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        carousel_id = kwargs.get('carousel_id')
-        carousel = self.get_object(carousel_id)
+class CarouselDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Обновить элемент Carousel",
+        request_body=CarouselSerializer,
+        responses={200: CarouselSerializer(many=True)},
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            carousel = Carousel.objects.get(id=kwargs['pk'])
+        except Carousel.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = CarouselSerializer(carousel, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        carousel_id = kwargs.get('carousel_id')
-        carousel = self.get_object(carousel_id)
+    @swagger_auto_schema(
+        operation_description="Частичное обновление элемента Carousel",
+        request_body=CarouselSerializer,
+        responses={200: CarouselSerializer(many=True)},
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            carousel = Carousel.objects.get(id=kwargs['pk'])
+        except Carousel.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = CarouselSerializer(carousel, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        carousel_id = kwargs.get('carousel_id')
-        carousel = self.get_object(carousel_id)
+    @swagger_auto_schema(
+        operation_description="Удалить элемент Carousel",
+        responses={204: 'No Content'},
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            carousel = Carousel.objects.get(id=kwargs['pk'])
+        except Carousel.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         carousel.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class MeetingCreateApiView(APIView):
-    def get_object(self, meeting_id):
-        try:
-            return Meeting.objects.get(id=meeting_id)
-        except Meeting.DoesNotExist:
-            raise Http404("Not found")
+class MeetingListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        meeting_id = kwargs.get('meeting_id')
-        meeting = self.get_object(meeting_id)
-        serializer = CarouselSerializer(meeting)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Получить все элементы Meeting",
+        responses={200: MeetingSerializer(many=True)},  # Ответ с сериализатором для списка встреч
+    )
+    def get(self, request, *args, **kwargs):
+        meetings = Meeting.objects.all()
+        serializer = MeetingSerializer(meetings, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Создать новый элемент Meeting",
+        request_body=MeetingSerializer,
+        responses={201: MeetingSerializer(many=True)},
+    )
+    def post(self, request, *args, **kwargs):
         serializer = MeetingSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        meeting_id = kwargs.get('meeting_id')
-        meeting = self.get_object(meeting_id)
+class MeetingDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Обновить элемент Meeting",
+        request_body=MeetingSerializer,
+        responses={200: MeetingSerializer(many=True)},
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            meeting = Meeting.objects.get(id=kwargs['pk'])
+        except Meeting.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = MeetingSerializer(meeting, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        meeting_id = kwargs.get('meeting_id')
-        meeting = self.get_object(meeting_id)
+    @swagger_auto_schema(
+        operation_description="Частичное обновление элемента Meeting",
+        request_body=MeetingSerializer,
+        responses={200: MeetingSerializer(many=True)},
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            meeting = Meeting.objects.get(id=kwargs['pk'])
+        except Meeting.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = MeetingSerializer(meeting, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        meeting_id = kwargs.get('meeting_id')
-        meeting = self.get_object(meeting_id)
+    @swagger_auto_schema(
+        operation_description="Удалить элемент Meeting",
+        responses={204: 'No Content'},
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            meeting = Meeting.objects.get(id=kwargs['pk'])
+        except Meeting.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         meeting.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class MiddleCreateApiView(APIView):
-    def get_object(self, middle_id):
-        try:
-            return Middle.objects.get(id=middle_id)
-        except Middle.DoesNotExist:
-            raise Http404("Not found")
+class MiddleListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        middle_id = kwargs.get('middle_id')
-        meeting = self.get_object(middle_id)
-        serializer = MiddleSerializer(meeting)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Get all Middle items",
+        responses={200: MiddleSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        middle = Middle.objects.all()
+        serializer = MiddleSerializer(middle, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new Middle item",
+        request_body=MiddleSerializer,
+        responses={201: MiddleSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = MiddleSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        middle_id = kwargs.get('middle_id')
-        middle = self.get_object(middle_id)
+class MiddleDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a Middle item",
+        request_body=MiddleSerializer,
+        responses={200: MiddleSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            middle = Middle.objects.get(id=kwargs['pk'])
+        except Middle.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = MiddleSerializer(middle, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        middle_id = kwargs.get('middle_id')
-        middle = self.get_object(middle_id)
+    @swagger_auto_schema(
+        operation_description="Partially update a Middle item",
+        request_body=MiddleSerializer,
+        responses={200: MiddleSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            middle = Middle.objects.get(id=kwargs['pk'])
+        except Middle.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = MiddleSerializer(middle, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        middle_id = kwargs.get('middle_id')
-        middle = self.get_object(middle_id)
+    @swagger_auto_schema(
+        operation_description="Delete a Middle item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            middle = Middle.objects.get(id=kwargs['pk'])
+        except Middle.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         middle.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class AboutCreateApiView(APIView):
-    def get_object(self, about_id):
-        try:
-            return About.objects.get(id=about_id)
-        except About.DoesNotExist:
-            raise Http404("Not found")
+class AboutListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        about_id = kwargs.get('about_id')
-        about = self.get_object(about_id)
-        serializer = AboutSerializer(about)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Get all About items",
+        responses={200: AboutSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        about = About.objects.all()
+        serializer = AboutSerializer(about, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new About item",
+        request_body=AboutSerializer,
+        responses={201: AboutSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = AboutSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        about_id = kwargs.get('about_id')
-        about = self.get_object(about_id)
+class AboutDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update an About item",
+        request_body=AboutSerializer,
+        responses={200: AboutSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            about = About.objects.get(id=kwargs['pk'])
+        except About.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = AboutSerializer(about, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        about_id = kwargs.get('about_id')
-        about = self.get_object(about_id)
+    @swagger_auto_schema(
+        operation_description="Partially update an About item",
+        request_body=AboutSerializer,
+        responses={200: AboutSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            about = About.objects.get(id=kwargs['pk'])
+        except About.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = AboutSerializer(about, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        about_id = kwargs.get('about_id')
-        about = self.get_object(about_id)
+
+    @swagger_auto_schema(
+        operation_description="Delete an About item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            about = About.objects.get(id=kwargs['pk'])
+        except About.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         about.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class PopularCreateApiView(APIView):
-    def get_object(self, popular_id):
-        try:
-            return Popular.objects.get(id=popular_id)
-        except Popular.DoesNotExist:
-            raise Http404("Not found")
+class PopularListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        popular_id = kwargs.get('popular_id')
-        popular = self.get_object(popular_id)
-        serializer = PopularSerializer(popular)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Get all Popular items",
+        responses={200: PopularSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        popular_items = Popular.objects.all()
+        serializer = PopularSerializer(popular_items, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new Popular item",
+        request_body=PopularSerializer,
+        responses={201: PopularSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = PopularSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request, **kwargs):
-        popular_id = kwargs.get('popular_id')
-        popular = self.get_object(popular_id)
-        serializer = PopularSerializer(popular, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        popular_id = kwargs.get('popular_id')
-        popular = self.get_object(popular_id)
-        serializer = PopularSerializer(popular, data=request.data, partial=True)
+class PopularDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a Popular item",
+        request_body=PopularSerializer,
+        responses={200: PopularSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            popular_item = Popular.objects.get(id=kwargs['pk'])
+        except Popular.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PopularSerializer(popular_item, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        popular_id = kwargs.get('popular_id')
-        popular = self.get_object(popular_id)
-        popular.delete()
+    @swagger_auto_schema(
+        operation_description="Partially update a Popular item",
+        request_body=PopularSerializer,
+        responses={200: PopularSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            popular_item = Popular.objects.get(id=kwargs['pk'])
+        except Popular.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PopularSerializer(popular_item, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        operation_description="Delete a Popular item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            popular_item = Popular.objects.get(id=kwargs['pk'])
+        except Popular.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        popular_item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class FactCreateApiView(APIView):
-    def get_object(self, fact_id):
-        try:
-            return Fact.objects.get(id=fact_id)
-        except Fact.DoesNotExist:
-            raise Http404("Not found")
+class FactListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        fact_id = kwargs.get('fact_id')
-        fact = self.get_object(fact_id)
-        serializer = FactSerializer(fact)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Get all Fact items",
+        responses={200: FactSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        facts = Fact.objects.all()
+        serializer = FactSerializer(facts, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new Fact item",
+        request_body=FactSerializer,
+        responses={201: FactSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = FactSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        fact_id = kwargs.get('fact_id')
-        fact = self.get_object(fact_id)
+class FactDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a Fact item",
+        request_body=FactSerializer,
+        responses={200: FactSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            fact = Fact.objects.get(id=kwargs['pk'])
+        except Fact.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = FactSerializer(fact, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        fact_id = kwargs.get('fact_id')
-        fact = self.get_object(fact_id)
+    @swagger_auto_schema(
+        operation_description="Partially update a Fact item",
+        request_body=FactSerializer,
+        responses={200: FactSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            fact = Fact.objects.get(id=kwargs['pk'])
+        except Fact.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = FactSerializer(fact, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        fact_id = kwargs.get('fact_id')
-        fact = self.get_object(fact_id)
+    @swagger_auto_schema(
+        operation_description="Delete a Fact item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            fact = Fact.objects.get(id=kwargs['pk'])
+        except Fact.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         fact.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class TouchCreateApiView(APIView):
-    def get_object(self, touch_id):
-        try:
-            return Touch.objects.get(id=touch_id)
-        except Touch.DoesNotExist:
-            raise Http404("Not found")
+class TouchListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        touch_id = kwargs.get('touch_id')
-        touch = self.get_object(touch_id)
-        serializer = TouchSerializer(touch)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Get all Touch items",
+        responses={200: TouchSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        touches = Touch.objects.all()
+        serializer = TouchSerializer(touches, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new Touch item",
+        request_body=TouchSerializer,
+        responses={201: TouchSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = TouchSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        touch_id = kwargs.get('touch_id')
-        touch = self.get_object(touch_id)
+class TouchDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a Touch item",
+        request_body=TouchSerializer,
+        responses={200: TouchSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            touch = Touch.objects.get(id=kwargs['pk'])
+        except Touch.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = TouchSerializer(touch, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        touch_id = kwargs.get('touch_id')
-        touch = self.get_object(touch_id)
+    @swagger_auto_schema(
+        operation_description="Partially update a Touch item",
+        request_body=TouchSerializer,
+        responses={200: TouchSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            touch = Touch.objects.get(id=kwargs['pk'])
+        except Touch.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = TouchSerializer(touch, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        touch_id = kwargs.get('touch_id')
-        touch = self.get_object(touch_id)
+    @swagger_auto_schema(
+        operation_description="Delete a Touch item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            touch = Touch.objects.get(id=kwargs['pk'])
+        except Touch.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         touch.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class EndCreateApiView(APIView):
-    def get_object(self, end_id):
-        try:
-            return End.objects.get(id=end_id)
-        except End.DoesNotExist:
-            raise Http404("Not found")
+class EndListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        end_id = kwargs.get('end_id')
-        end = self.get_object(end_id)
-        serializer = EndSerializer(end)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Get all End items",
+        responses={200: EndSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        ends = End.objects.all()
+        serializer = EndSerializer(ends, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new End item",
+        request_body=EndSerializer,
+        responses={201: EndSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = EndSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        end_id = kwargs.get('end_id')
-        end = self.get_object(end_id)
+class EndDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update an End item",
+        request_body=EndSerializer,
+        responses={200: EndSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            end = End.objects.get(id=kwargs['pk'])
+        except End.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = EndSerializer(end, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        end_id = kwargs.get('end_id')
-        end = self.get_object(end_id)
+    @swagger_auto_schema(
+        operation_description="Partially update an End item",
+        request_body=EndSerializer,
+        responses={200: EndSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            end = End.objects.get(id=kwargs['pk'])
+        except End.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = EndSerializer(end, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        end_id = kwargs.get('end_id')
-        end = self.get_object(end_id)
+    @swagger_auto_schema(
+        operation_description="Delete an End item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            end = End.objects.get(id=kwargs['pk'])
+        except End.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         end.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# middle view
+class MiddleFirstListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-class MiddleFirstCreateApiView(APIView):
-    def get_object(self, first_id):
-        try:
-            return MiddleFirst.objects.get(id=first_id)
-        except MiddleFirst.DoesNotExist:
-            raise Http404("Not found")
+    @swagger_auto_schema(
+        operation_description="Get all MiddleFirst items",
+        responses={200: MiddleFirstSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        middlefirsts = MiddleFirst.objects.all()
+        serializer = MiddleFirstSerializer(middlefirsts, many=True)
+        return Response(serializer.data)
 
-    def get(self, **kwargs):
-        first_id = kwargs.get('first_id')
-        first = self.get_object(first_id)
-        serializer = MiddleFirstSerializer(first)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new MiddleFirst item",
+        request_body=MiddleFirstSerializer,
+        responses={201: MiddleFirstSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = MiddleFirstSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        first_id = kwargs.get('first_id')
-        first = self.get_object(first_id)
-        serializer = MiddleFirstSerializer(first, data=request.data)
+class MiddleFirstDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a MiddleFirst item",
+        request_body=MiddleFirstSerializer,
+        responses={200: MiddleFirstSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            middlefirst = MiddleFirst.objects.get(id=kwargs['pk'])
+        except MiddleFirst.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = MiddleFirstSerializer(middlefirst, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        first_id = kwargs.get('first_id')
-        first = self.get_object(first_id)
-        serializer = MiddleFirstSerializer(first, data=request.data, partial=True)
+    @swagger_auto_schema(
+        operation_description="Partially update a MiddleFirst item",
+        request_body=MiddleFirstSerializer,
+        responses={200: MiddleFirstSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            middlefirst = MiddleFirst.objects.get(id=kwargs['pk'])
+        except MiddleFirst.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = MiddleFirstSerializer(middlefirst, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        first_id = kwargs.get('first_id')
-        first = self.get_object(first_id)
-        first.delete()
+    @swagger_auto_schema(
+        operation_description="Delete a MiddleFirst item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            middlefirst = MiddleFirst.objects.get(id=kwargs['pk'])
+        except MiddleFirst.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        middlefirst.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class MiddleSecondCreateApiView(APIView):
-    def get_object(self, first_id):
-        try:
-            return MiddleSecond.objects.get(id=first_id)
-        except MiddleSecond.DoesNotExist:
-            raise Http404("Not found")
+class MiddleSecondListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        second_id = kwargs.get('second_id')
-        second = self.get_object(second_id)
-        serializer = MiddleFirstSerializer(second)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Get all MiddleSecond items",
+        responses={200: MiddleSecondSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        middleseconds = MiddleSecond.objects.all()
+        serializer = MiddleSecondSerializer(middleseconds, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new MiddleSecond item",
+        request_body=MiddleSecondSerializer,
+        responses={201: MiddleSecondSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = MiddleSecondSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        second_id = kwargs.get('second_id')
-        second = self.get_object(second_id)
-        serializer = MiddleSecondSerializer(second, data=request.data)
+class MiddleSecondDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a MiddleSecond item",
+        request_body=MiddleSecondSerializer,
+        responses={200: MiddleSecondSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            middlesecond = MiddleSecond.objects.get(id=kwargs['pk'])
+        except MiddleSecond.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = MiddleSecondSerializer(middlesecond, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        second_id = kwargs.get('second_id')
-        second = self.get_object(second_id)
-        serializer = MiddleSecondSerializer(second, data=request.data, partial=True)
+    @swagger_auto_schema(
+        operation_description="Partially update a MiddleSecond item",
+        request_body=MiddleSecondSerializer,
+        responses={200: MiddleSecondSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            middlesecond = MiddleSecond.objects.get(id=kwargs['pk'])
+        except MiddleSecond.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = MiddleSecondSerializer(middlesecond, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        second_id = kwargs.get('second_id')
-        second = self.get_object(second_id)
-        second.delete()
+    @swagger_auto_schema(
+        operation_description="Delete a MiddleSecond item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            middlesecond = MiddleSecond.objects.get(id=kwargs['pk'])
+        except MiddleSecond.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        middlesecond.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# Last View
 
-class LastCreateApiView(APIView):
-    def get_object(self, last_id):
-        try:
-            return Last.objects.get(id=last_id)
-        except Last.DoesNotExist:
-            raise Http404("Not found")
+class LastListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        last_id = kwargs.get('last_id')
-        last = self.get_object(last_id)
-        serializer = LastSerializer(last)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Get all Last items",
+        responses={200: LastSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        lasts = Last.objects.all()
+        serializer = LastSerializer(lasts, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new Last item",
+        request_body=LastSerializer,
+        responses={201: LastSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = LastSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        last_id = kwargs.get('last_id')
-        last = self.get_object(last_id)
+class LastDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a Last item",
+        request_body=LastSerializer,
+        responses={200: LastSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            last = Last.objects.get(id=kwargs['pk'])
+        except Last.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = LastSerializer(last, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        last_id = kwargs.get('last__id')
-        last = self.get_object(last_id)
+    @swagger_auto_schema(
+        operation_description="Partially update a Last item",
+        request_body=LastSerializer,
+        responses={200: LastSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            last = Last.objects.get(id=kwargs['pk'])
+        except Last.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = LastSerializer(last, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        last_id = kwargs.get('last_id')
-        last = self.get_object(last_id)
+    @swagger_auto_schema(
+        operation_description="Delete a Last item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            last = Last.objects.get(id=kwargs['pk'])
+        except Last.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         last.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class DetailCreateApiView(APIView):
-    def get_object(self, detail_id):
-        try:
-            return Detail.objects.get(id=detail_id)
-        except Detail.DoesNotExist:
-            raise Http404("Not found")
+class DetailListAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    def get(self, **kwargs):
-        detail_id = kwargs.get('detail_id')
-        detail = self.get_object(detail_id)
-        serializer = DetailSerializer(detail)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Get all Detail items",
+        responses={200: DetailSerializer(many=True)}
+    )
+    def get(self, request, *args, **kwargs):
+        details = Detail.objects.all()
+        serializer = DetailSerializer(details, many=True)
+        return Response(serializer.data)
 
-    def post(self, request):
+    @swagger_auto_schema(
+        operation_description="Create a new Detail item",
+        request_body=DetailSerializer,
+        responses={201: DetailSerializer(many=True)}
+    )
+    def post(self, request, *args, **kwargs):
         serializer = DetailSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, **kwargs):
-        detail_id = kwargs.get('detail_id')
-        detail = self.get_object(detail_id)
+class DetailDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a Detail item",
+        request_body=DetailSerializer,
+        responses={200: DetailSerializer(many=True)}
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            detail = Detail.objects.get(id=kwargs['pk'])
+        except Detail.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = DetailSerializer(detail, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request, **kwargs):
-        detail_id = kwargs.get('detail_id')
-        detail = self.get_object(detail_id)
+    @swagger_auto_schema(
+        operation_description="Partially update a Detail item",
+        request_body=DetailSerializer,
+        responses={200: DetailSerializer(many=True)}
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            detail = Detail.objects.get(id=kwargs['pk'])
+        except Detail.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = DetailSerializer(detail, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, **kwargs):
-        detail_id = kwargs.get('detail_id')
-        detail = self.get_object(detail_id)
+    @swagger_auto_schema(
+        operation_description="Delete a Detail item",
+        responses={204: 'No Content'}
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            detail = Detail.objects.get(id=kwargs['pk'])
+        except Detail.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
         detail.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
