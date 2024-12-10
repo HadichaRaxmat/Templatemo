@@ -12,7 +12,7 @@ class ContactSerializer(serializers.ModelSerializer):
 class HeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Header
-        fields = ['id', 'logo', 'menu']
+        fields = ['id', 'logo']
 
 
 class BannerSerializer(serializers.ModelSerializer):

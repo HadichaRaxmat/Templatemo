@@ -18,7 +18,7 @@ class LoginForm(AuthenticationForm):
 class HeaderForm(forms.ModelForm):
     class Meta:
         model = Header
-        fields = ['logo', 'menu']
+        fields = ['logo']
 
 
 class BannerForm(forms.ModelForm):
