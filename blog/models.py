@@ -25,7 +25,13 @@ class Contact(models.Model):
 
 class Header(models.Model):
     logo = models.CharField(max_length=20)
-    menu = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.logo
+
+
+class Menu(models.Model):
+    menu = models.CharField(max_length=20)
 
     def __str__(self):
         return self.menu
