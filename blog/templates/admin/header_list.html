@@ -14,7 +14,6 @@
                 <tr>
                     <th><i class="fas fa-hashtag"></i> ID</th>
                     <th><i class="fas fa-tags"></i> Logo</th>
-                    <th><i class="fas fa-bars"></i> Menu</th>
                     <th class="text-center"><i class="fas fa-cogs"></i> Actions</th>
                 </tr>
             </thead>
@@ -23,7 +22,6 @@
                 <tr>
                     <td>{{ head.id }}</td>
                     <td>{{ head.logo }}</td>
-                    <td>{{ head.menu }}</td>
                     <td class="text-center">
                         <a href="{% url 'header_update' head.id %}" class="btn btn-sm btn-outline-info" title="Edit">
                             <i class="fas fa-edit"></i>

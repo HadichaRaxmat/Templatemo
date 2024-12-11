@@ -8,10 +8,19 @@
     <div class="card-body">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+
+            <!-- Поле Logo -->
             <div class="mb-3">
-                <label for="id_menu" class="form-label">Logo</label>
-                <input type="text" name="menu" value="{{ form.menu.value|default:'' }}" class="form-control" id="id_menu">
+                <label for="id_logo" class="form-label">Logo</label>
+                <input type="text" name="logo" value="{{ form.logo.value|default:'' }}" class="form-control" id="id_logo">
+                <!-- Ошибка для поля Logo -->
+                {% if form.logo.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ form.logo.errors|join:", " }}
+                    </div>
+                {% endif %}
             </div>
+
             <div class="d-flex justify-content-between mt-4">
                 <button type="submit" class="btn btn-success btn-sm">
                     <i class="fas fa-save"></i> Submit
@@ -24,3 +33,5 @@
     </div>
 </div>
 {% endblock %}
+
+

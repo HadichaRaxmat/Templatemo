@@ -24,9 +24,9 @@
                 {% for banner in banners %}
                 <tr>
                     <td>{{ banner.id }}</td>
-                    <td>{{ banner.main }}</td>
-                    <td>{{ banner.title }}</td>
-                    <td>{{ banner.text|truncatewords:10 }}</td>
+                    <td>{{ banner.main|truncatewords:2 }}</td>
+                    <td>{{ banner.title|truncatewords:2 }}</td>
+                    <td>{{ banner.text|truncatewords:2 }}</td>
                     <td>{{ banner.last }}</td>
                     <td class="text-center">
                         <a href="{% url 'banner_update' banner.pk %}" class="btn btn-sm btn-outline-info" title="Edit">

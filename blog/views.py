@@ -163,16 +163,18 @@ def header_create(request):
     if request.method == 'POST':
         form = HeaderForm(request.POST, request.FILES)
         if form.is_valid():
+            if Header.objects.exists():
+                form.add_error('logo', 'Только один логотип может быть добавлен.')
+                return render(request, 'admin/header_create.html', {'form': form})
             form.save()
             return redirect('header_list')
     else:
         form = HeaderForm()
-        return render(request, 'admin/header_create.html', {'form': form})
+    return render(request, 'admin/header_create.html', {'form': form})
 
 
 def header_list(request):
     header = Header.objects.all()
-    print(header)
     return render(request, 'admin/header_list.html', {'header': header})
 
 
