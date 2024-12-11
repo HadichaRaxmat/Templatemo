@@ -4,14 +4,15 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView
 from .models import (Header, Banner, Carousel, Meeting, Middle, About, Popular, Fact, Touch, End, MiddleFirst,
-                     MiddleSecond, Last, Detail, Contact, UserContact)
+                     MiddleSecond, Last, Detail, Contact, UserContact, Menu)
 from .serializers import (HeaderSerializer, ContactSerializer, BannerSerializer, CarouselSerializer, MeetingSerializer,
                           MiddleSerializer, AboutSerializer, PopularSerializer, FactSerializer, TouchSerializer,
-                          EndSerializer, MiddleFirstSerializer, MiddleSecondSerializer, LastSerializer, DetailSerializer)
+                          EndSerializer, MiddleFirstSerializer, MiddleSecondSerializer, LastSerializer,
+                          DetailSerializer, MenuSerializer)
 from rest_framework.response import Response
 from .forms import (HeaderForm, BannerForm, CarouselForm, MeetingForm, MiddleForm, AboutForm, PopularForm, FactForm,
                     TouchForm, EndForm, MiddleFirstForm, MiddleSecondForm, LastForm, DetailForm, ContactForm,
-                    UserContactForm)
+                    UserContactForm, MenuForm)
 
 
 def admin_view(request):
@@ -42,6 +43,7 @@ def home_view(request):
     facts = Fact.objects.all()
     touch = Touch.objects.all()
     end = End.objects.all()
+    menu = Menu.objects.all()
     d = {
         'header': header,
         'contact': contact,
@@ -53,7 +55,8 @@ def home_view(request):
         'popular': popular,
         'facts': facts,
         'touch': touch,
-        'end': end
+        'end': end,
+        'menu': menu
     }
     return render(request, 'index.html', context=d)
 
@@ -107,7 +110,7 @@ def user_contact_update(request, pk):
             form.save()
             return redirect('user_contact_list')
     else:
-        form = ContactForm(instance=user_contact)
+        form = UserContactForm(instance=user_contact)
     return render(request, 'admin/user_contact_update.html', {'form': form})
 
 
@@ -192,6 +195,42 @@ def header_delete(request, pk):
         header.delete()
         return redirect('header_list')
     return render(request, 'admin/header_delete.html', {'header': header})
+
+
+def menu_create(request):
+    if request.method == 'POST':
+        form = MenuForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('menu_list')
+    else:
+        form = MenuForm()
+        return render(request, 'admin/menu_create.html', {'form': form})
+
+
+def menu_list(request):
+    menu = Menu.objects.all()
+    return render(request, 'admin/menu_list.html', {'menu': menu})
+
+
+def menu_update(request, pk):
+    menu = get_object_or_404(Menu, id=pk)
+    if request.method == 'POST':
+        form = MenuForm(request.POST, instance=menu)
+        if form.is_valid():
+            form.save()
+            return redirect('menu_list')
+    else:
+        form = MenuForm(instance=menu)
+    return render(request, 'admin/menu_update.html', {'form': form, 'menu': menu})
+
+
+def menu_delete(request, pk):
+    menu = get_object_or_404(Menu, id=pk)
+    if request.method == 'POST':
+        menu.delete()
+        return redirect('menu_list')
+    return render(request, 'admin/menu_delete.html', {'menu': menu})
 
 
 def banner_create(request):
@@ -747,6 +786,81 @@ class HeaderDetailAPIView(APIView):
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
         header.delete()  # Удаляем объект
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class MenuListAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Get all Menu items",
+        responses={200: MenuSerializer(many=True)},
+    )
+    def get(self, request, *args, **kwargs):
+        menu = Menu.objects.all()
+        serializer = MenuSerializer(menu, many=True)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(
+        operation_description="Create a new Menu item",
+        request_body=MenuSerializer,
+        responses={201: MenuSerializer(many=True)},
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = MenuSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MenuDetailAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Update a Menu item",
+        request_body=MenuSerializer,
+        responses={200: MenuSerializer(many=True)},
+    )
+    def put(self, request, *args, **kwargs):
+        try:
+            menu = Menu.objects.get(id=kwargs['pk'])
+        except Menu.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = MenuSerializer(menu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        operation_description="Partially update a Menu item",
+        request_body=MenuSerializer,
+        responses={200: MenuSerializer(many=True)},
+    )
+    def patch(self, request, *args, **kwargs):
+        try:
+            menu = Menu.objects.get(id=kwargs['pk'])
+        except Menu.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = MenuSerializer(menu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        operation_description="Delete a Menu item",
+        responses={204: 'No Content'},
+    )
+    def delete(self, request, *args, **kwargs):
+        try:
+            menu = Menu.objects.get(id=kwargs['pk'])
+        except Menu.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        menu.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

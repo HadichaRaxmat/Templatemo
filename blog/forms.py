@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from .models import (Header, Banner, Carousel, Meeting, Middle, About, Popular, Fact, Touch, End, MiddleFirst,
-                     MiddleSecond, Last, Detail, Contact, UserContact)
+                     MiddleSecond, Last, Detail, Contact, UserContact, Menu)
 
 
 
@@ -19,6 +19,12 @@ class HeaderForm(forms.ModelForm):
     class Meta:
         model = Header
         fields = ['logo']
+
+
+class MenuForm(forms.ModelForm):
+    class Meta:
+        model = Menu
+        fields = ['menu']
 
 
 class BannerForm(forms.ModelForm):

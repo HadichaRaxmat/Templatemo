@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (Header, Banner, Carousel, Contact, Meeting, Middle, About,
-                     Popular, Fact, Touch, End, MiddleFirst, MiddleSecond, Last, Detail)
+                     Popular, Fact, Touch, End, MiddleFirst, MiddleSecond, Last, Detail, Menu)
 
 
 class ContactSerializer(serializers.ModelSerializer):
@@ -13,6 +13,12 @@ class HeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Header
         fields = ['id', 'logo']
+
+
+class MenuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Menu
+        fields = ['id', 'menu']
 
 
 class BannerSerializer(serializers.ModelSerializer):

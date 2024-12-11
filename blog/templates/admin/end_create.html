@@ -3,17 +3,27 @@
 {% block content %}
 <div class="card shadow-sm">
     <div class="card-header bg-light text-dark">
-        <h3 class="card-title m-0">Create New Header</h3>
+        <h3 class="card-title m-0">Create New End</h3>
     </div>
     <div class="card-body">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <div class="mb-3">
+                <label for="id_title" class="form-label">Title</label>
+                <input type="text" name="title" value="{{ form.title.value|default:'' }}" class="form-control" id="id_title">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_text" class="form-label">Text</label>
+                <input type="text" name="text" value="{{ form.text.value|default:'' }}" class="form-control" id="id_text">
+            </div>
+
             <div class="d-flex justify-content-between mt-4">
                 <button type="submit" class="btn btn-success btn-sm">
                     <i class="fas fa-save"></i> Submit
                 </button>
-                <a href="{% url 'header_list' %}" class="btn btn-light btn-sm text-dark font-weight-bold">
+                <a href="{% url 'end_list' %}" class="btn btn-light btn-sm text-dark font-weight-bold">
                     <i class="fas fa-arrow-left"></i> Back
                 </a>
             </div>
@@ -21,3 +31,4 @@
     </div>
 </div>
 {% endblock %}
+

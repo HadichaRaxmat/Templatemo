@@ -3,12 +3,42 @@
 {% block content %}
 <div class="card shadow-sm">
     <div class="card-header bg-light text-dark">
-        <h3 class="card-title m-0">Create New Contact Method</h3>
+        <h3 class="card-title m-0">Create New Contact</h3>
     </div>
     <div class="card-body">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <div class="mb-3">
+                <label for="id_title" class="form-label">Title</label>
+                <input type="text" name="title" value="{{ form.title.value|default:'' }}" class="form-control" id="id_title">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_first_contact" class="form-label">First Contact</label>
+                <input type="text" name="first_contact" value="{{ form.first_contact.value|default:'' }}" class="form-control" id="id_first_contact">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_second_contact" class="form-label">Second Contact</label>
+                <input type="text" name="second_contact" value="{{ form.second_contact.value|default:'' }}" class="form-control" id="id_second_contact">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_third_contact" class="form-label">Third Contact</label>
+                <input type="text" name="third_contact" value="{{ form.third_contact.value|default:'' }}" class="form-control" id="id_third_contact">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_fourth_contact" class="form-label">Fourth Contact</label>
+                <input type="text" name="fourth_contact" value="{{ form.fourth_contact.value|default:'' }}" class="form-control" id="id_fourth_contact">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_last" class="form-label">Last</label>
+                <input type="text" name="last" value="{{ form.last.value|default:'' }}" class="form-control" id="id_last">
+            </div>
+
             <div class="d-flex justify-content-between mt-4">
                 <button type="submit" class="btn btn-success btn-sm">
                     <i class="fas fa-save"></i> Submit

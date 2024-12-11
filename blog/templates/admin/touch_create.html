@@ -6,9 +6,49 @@
         <h3 class="card-title m-0">Create New Touch</h3>
     </div>
     <div class="card-body">
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <div class="mb-3">
+                <label for="id_first_method" class="form-label">First Method</label>
+                <input type="text" name="first_method" value="{{ form.first_method.value|default:'' }}" class="form-control" id="id_first_method">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_first" class="form-label">First</label>
+                <input type="text" name="first" value="{{ form.first.value|default:'' }}" class="form-control" id="id_first">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_second_method" class="form-label">Second Method</label>
+                <input type="text" name="second_method" value="{{ form.second_method.value|default:'' }}" class="form-control" id="id_second_method">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_second" class="form-label">Second</label>
+                <input type="text" name="second" value="{{ form.second.value|default:'' }}" class="form-control" id="id_second">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_third_method" class="form-label">Third Method</label>
+                <input type="text" name="third_method" value="{{ form.third_method.value|default:'' }}" class="form-control" id="id_third_method">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_third" class="form-label">Third</label>
+                <input type="text" name="third" value="{{ form.third.value|default:'' }}" class="form-control" id="id_third">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_fourth_method" class="form-label">Fourth Method</label>
+                <input type="text" name="fourth_method" value="{{ form.fourth_method.value|default:'' }}" class="form-control" id="id_fourth_method">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_fourth" class="form-label">Fourth</label>
+                <input type="text" name="fourth" value="{{ form.fourth.value|default:'' }}" class="form-control" id="id_fourth">
+            </div>
+
             <div class="d-flex justify-content-between mt-4">
                 <button type="submit" class="btn btn-success btn-sm">
                     <i class="fas fa-save"></i> Submit
@@ -21,3 +61,4 @@
     </div>
 </div>
 {% endblock %}
+

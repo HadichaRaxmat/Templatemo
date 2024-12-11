@@ -64,10 +64,10 @@ https://templatemo.com/tm-569-edu-meeting
                       <!-- ***** Logo End ***** -->
                       <!-- ***** Menu Start ***** -->
                       <ul class="nav">
-                          {% for head in header %}
-                          <li class="scroll-to-section"><a href="/" class="active">{{ head.menu }}</a></li>
+                          {% for m in menu %}
+                          <li class="scroll-to-section"><a href="/" class="active">{{ m.menu }}</a></li>
                           {% endfor %}
-                          {% for head in header %}
+                          {% for m in menu %}
                           <li><a href="/meetings"></a></li>
                           {% endfor %}
                           <li class="scroll-to-section"><a href="#apply">Подать заявку</a></li>

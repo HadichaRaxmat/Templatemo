@@ -3,7 +3,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 from .views import (home_view, meetings_view, meeting_details_view, header_create, header_update, header_list,
-                    header_delete, banner_list, banner_create, banner_update, banner_delete, carousel_create,
+                    header_delete, menu_delete, menu_create, menu_update, menu_list, banner_list, banner_create, banner_update, banner_delete, carousel_create,
                     carousel_list, carousel_update, carousel_delete, meeting_create, meeting_list, meeting_update,
                     meeting_delete, middle_create, middle_delete, middle_list, middle_update, popular_delete,
                     popular_list, popular_create, popular_update, fact_create, fact_update, fact_delete, fact_list,
@@ -20,7 +20,7 @@ from .views import (home_view, meetings_view, meeting_details_view, header_creat
                     PopularDetailAPIView, FactDetailAPIView,FactListAPIView, TouchDetailAPIView, TouchListAPIView,
                     EndDetailAPIView, EndListAPIView, MiddleFirstDetailAPIView, MiddleFirstListAPIView,
                     MiddleSecondListAPIView, MiddleSecondDetailAPIView, LastDetailAPIView, LastListAPIView,
-                    DetailListAPIView, DetailDetailAPIView)
+                    DetailListAPIView, DetailDetailAPIView, MenuDetailAPIView, MenuListAPIView)
 
 
 schema_view = get_schema_view(
@@ -58,6 +58,11 @@ urlpatterns = [
     path('header/list/', header_list, name='header_list'), # Header list
     path('header/update/<int:pk>/', header_update, name='header_update'), #update
     path('header/delete/<int:pk>/', header_delete, name='header_delete'), #delete
+    #menu
+    path('menu/create/', menu_create, name='menu_create'), #create
+    path('menu/list/', menu_list, name='menu_list'), # Header list
+    path('menu/update/<int:pk>/', menu_update, name='menu_update'), #update
+    path('menu/delete/<int:pk>/', menu_delete, name='menu_delete'), #delete
     # Banner
     path('banner/create/', banner_create, name='banner_create'), #create
     path('banner/list/', banner_list, name='banner_list'), #list
@@ -159,6 +164,8 @@ urlpatterns = [
     path('last/<int:pk>/', LastDetailAPIView.as_view(), name='last-detail'),
     path('detail/', DetailListAPIView.as_view(), name='detail-list'),
     path('detail/<int:pk>/', DetailDetailAPIView.as_view(), name='detail-detail'),
+    path('menu/', MenuListAPIView.as_view(), name='menu-list'),
+    path('menu/<int:pk>/', MenuDetailAPIView.as_view(), name='menu-detail'),
 ]
 
 

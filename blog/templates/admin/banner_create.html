@@ -8,10 +8,34 @@
     <div class="card-body">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <!-- Поле для main -->
+            <div class="mb-3">
+                <label for="id_main" class="form-label">Main</label>
+                <input type="text" name="main" value="{{ form.main.value|default:'' }}" class="form-control" id="id_main">
+            </div>
+
+            <!-- Поле для title -->
+            <div class="mb-3">
+                <label for="id_title" class="form-label">Title</label>
+                <input type="text" name="title" value="{{ form.title.value|default:'' }}" class="form-control" id="id_title">
+            </div>
+
+            <!-- Поле для text -->
+            <div class="mb-3">
+                <label for="id_text" class="form-label">Text</label>
+                <textarea name="text" class="form-control" id="id_text" rows="4">{{ form.text.value|default:'' }}</textarea>
+            </div>
+
+            <!-- Поле для last -->
+            <div class="mb-3">
+                <label for="id_last" class="form-label">Last</label>
+                <input type="text" name="last" value="{{ form.last.value|default:'' }}" class="form-control" id="id_last">
+            </div>
+
             <div class="d-flex justify-content-between mt-4">
-                <button type="submit" class="btn btn-info btn-sm">
-                    <i class="fas fa-save"></i> Save
+                <button type="submit" class="btn btn-success btn-sm">
+                    <i class="fas fa-save"></i> Submit
                 </button>
                 <a href="{% url 'banner_list' %}" class="btn btn-light btn-sm text-dark font-weight-bold">
                     <i class="fas fa-arrow-left"></i> Back
