@@ -72,6 +72,17 @@ class Meeting(models.Model):
         return self.heading
 
 
+class MeetingHeader(models.Model):
+    title = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.title
+
+class MeetingCategory(models.Model):
+    title = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.title
 
 class Middle(models.Model):
     title = models.CharField(max_length=30)
