@@ -12,7 +12,7 @@ from .serializers import (HeaderSerializer, ContactSerializer, BannerSerializer,
 from rest_framework.response import Response
 from .forms import (HeaderForm, BannerForm, CarouselForm, MeetingForm, MiddleForm, AboutForm, PopularForm, FactForm,
                     TouchForm, EndForm, MiddleFirstForm, MiddleSecondForm, LastForm, DetailForm, ContactForm,
-                    UserContactForm, MenuForm, MeetingCategory, MeetingHeader, MeetingHeaderForm)
+                    UserContactForm, MenuForm, MeetingHeader, MeetingHeaderForm)
 
 
 def admin_view(request):
@@ -316,7 +316,7 @@ def carousel_delete(request, pk):
 
 def meeting_create(request):
     if request.method == 'POST':
-        form = MeetingForm(request.POST)
+        form = MeetingForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('meeting_list')
@@ -333,17 +333,14 @@ def meeting_list(request):
 
 def meeting_update(request, pk):
     meeting = get_object_or_404(Meeting, id=pk)
-
     if request.method == 'POST':
-        form = MeetingForm(request.POST, instance=meeting)
+        form = MeetingForm(request.POST, request.FILES, instance=meeting)
         if form.is_valid():
             form.save()
             return redirect('meeting_list')
     else:
         form = MeetingForm(instance=meeting)
-
-    return render(request, 'admin/meeting_update.html', {'form': form, 'meeting': meeting})
-
+    return render(request, 'admin/meeting_update.html', {'form': form})
 
 def meeting_delete(request, pk):
     meeting = get_object_or_404(Meeting, id=pk)
@@ -436,14 +433,14 @@ def middle_delete(request, pk):
 
 def popular_create(request):
     if request.method == 'POST':
-        form = PopularForm(request.POST)
+        form = PopularForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('popular_list')
     else:
-        form = PopularForm()  # Пустая форма при GET-запросе
-    return render(request, 'admin/popular_create.html', {'form': form})
+        form = PopularForm()
 
+    return render(request, 'admin/popular_create.html', {'form': form})
 
 def popular_list(request):
     popular = Popular.objects.all()
@@ -451,9 +448,9 @@ def popular_list(request):
 
 
 def popular_update(request, pk):
-    popular = Popular.objects.get(id=pk)
+    popular = get_object_or_404(Popular, id=pk)
     if request.method == 'POST':
-        form = PopularForm(request.POST, instance=popular)
+        form = PopularForm(request.POST, request.FILES, instance=popular)
         if form.is_valid():
             form.save()
             return redirect('popular_list')
@@ -993,7 +990,7 @@ class BannerListAPIView(APIView):
 
     @swagger_auto_schema(
         operation_description="Получить все баннеры",
-        responses={200: BannerSerializer(many=True)},  # Ответ с сериализатором для списка баннеров
+        responses={200: BannerSerializer(many=True)},
     )
     def get(self, request, *args, **kwargs):
         banners = Banner.objects.all()
@@ -1143,7 +1140,7 @@ class MeetingListAPIView(APIView):
 
     @swagger_auto_schema(
         operation_description="Получить все элементы Meeting",
-        responses={200: MeetingSerializer(many=True)},  # Ответ с сериализатором для списка встреч
+        responses={200: MeetingSerializer(many=True)},
     )
     def get(self, request, *args, **kwargs):
         meetings = Meeting.objects.all()

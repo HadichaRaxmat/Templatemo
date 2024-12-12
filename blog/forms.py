@@ -56,7 +56,7 @@ class MeetingForm(forms.ModelForm):
     class Meta:
         model = Meeting
         fields = [
-            'title', 'invitation', 'price', 'month',
+            'title', 'photo', 'invitation', 'price', 'month',
             'day', 'division', 'first_text', 'second_text'
         ]
 
@@ -70,7 +70,7 @@ class MiddleForm(forms.ModelForm):
 class PopularForm(forms.ModelForm):
     class Meta:
         model = Popular
-        fields = ['title', 'text', 'price']
+        fields = ['title', 'text', 'price', 'photo']
 
 
 class FactForm(forms.ModelForm):

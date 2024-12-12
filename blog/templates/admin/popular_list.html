@@ -16,6 +16,7 @@
                     <th><i class="fas fa-text-width"></i> Title</th>
                     <th><i class="fas fa-paragraph"></i> Text</th>
                     <th><i class="fas fa-dollar-sign"></i> Price</th>
+                    <th><i class="fas fa-dollar-sign"></i> Photo</th>
                     <th class="text-center"><i class="fas fa-cogs"></i> Actions</th>
                 </tr>
             </thead>
@@ -26,6 +27,11 @@
                         <td>{{ pop.title }}</td>
                         <td>{{ pop.text|truncatewords:10 }}</td>
                         <td>{{ pop.price }}</td>
+                        <td>
+                            <a href="{{ pop.photo.url }}" target="_blank">
+                                {{ pop.photo.url|slice:':30' }}...
+                            </a>
+                        </td>
                         <td class="text-center">
                             <a href="{% url 'popular_update' pop.pk %}" class="btn btn-sm btn-outline-info" title="Edit">
                                 <i class="fas fa-edit"></i>

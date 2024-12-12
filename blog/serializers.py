@@ -39,7 +39,7 @@ class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
         read_only_fields = ('id',)
-        fields = ['id', 'title', 'invitation', 'price', 'month', 'day', 'division', 'first_text', 'second_text']
+        fields = ['id', 'title', 'photo', 'invitation', 'price', 'month', 'day', 'division', 'first_text', 'second_text']
 
 class MeetingHeaderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,7 +69,7 @@ class PopularSerializer(serializers.ModelSerializer):
     class Meta:
         model = Popular
         read_only_fields = ('id', )
-        fields = ['id', 'title', 'text', 'price']
+        fields = ['id', 'title', 'text', 'price', 'photo']
 
 
 class FactSerializer(serializers.ModelSerializer):
