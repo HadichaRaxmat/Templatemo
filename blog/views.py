@@ -12,7 +12,7 @@ from .serializers import (HeaderSerializer, ContactSerializer, BannerSerializer,
 from rest_framework.response import Response
 from .forms import (HeaderForm, BannerForm, CarouselForm, MeetingForm, MiddleForm, AboutForm, PopularForm, FactForm,
                     TouchForm, EndForm, MiddleFirstForm, MiddleSecondForm, LastForm, DetailForm, ContactForm,
-                    UserContactForm, MenuForm)
+                    UserContactForm, MenuForm, MeetingCategory, MeetingHeader, MeetingHeaderForm)
 
 
 def admin_view(request):
@@ -44,6 +44,7 @@ def home_view(request):
     touch = Touch.objects.all()
     end = End.objects.all()
     menu = Menu.objects.all()
+    meetingheader = MeetingHeader.objects.all()
     d = {
         'header': header,
         'contact': contact,
@@ -56,7 +57,8 @@ def home_view(request):
         'facts': facts,
         'touch': touch,
         'end': end,
-        'menu': menu
+        'menu': menu,
+        'meetingheader': meetingheader
     }
     return render(request, 'index.html', context=d)
 
@@ -351,6 +353,49 @@ def meeting_delete(request, pk):
         return redirect('meeting_list')
 
     return render(request, 'admin/meeting_delete.html', {'meeting': meeting})
+
+
+def meeting_header_create(request):
+    if request.method == 'POST':
+        form = MeetingHeaderForm(request.POST, request.FILES)
+        if form.is_valid():
+            if MeetingHeader.objects.exists():
+                form.add_error('title', 'Только один заголовок может быть добавлен.')
+                return render(request, 'admin/meeting_header_create.html', {'form': form})
+            form.save()
+            return redirect('meeting_header_list')
+    else:
+        form = MeetingHeaderForm()
+    return render(request, 'admin/meeting_header_create.html', {'form': form})
+
+
+def meeting_header_list(request):
+    meetingheader = MeetingHeader.objects.all()
+    return render(request, 'admin/meeting_header_list.html', {'meetingheader': meetingheader})
+
+
+def meeting_header_update(request, pk):
+    meetingheader = get_object_or_404(MeetingHeader, id=pk)
+    if request.method == 'POST':
+        form = MeetingHeaderForm(request.POST, instance=meetingheader)
+        if form.is_valid():
+            form.save()
+            return redirect('meeting_header_list')
+    else:
+        form = MeetingForm(instance=meetingheader)
+
+    return render(request, 'admin/meeting_header_update.html', {'form': form, 'meetingheader': meetingheader})
+
+
+def meeting_header_delete(request, pk):
+    meetingheader = get_object_or_404(MeetingHeader, id=pk)
+    if request.method == 'POST':
+        meetingheader.delete()
+        return redirect('meeting_header_list')
+
+    return render(request, 'admin/meeting_header_delete.html', {'meetingheader': meetingheader})
+
+
 
 
 def middle_create(request):

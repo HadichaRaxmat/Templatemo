@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (Header, Banner, Carousel, Contact, Meeting, Middle, About,
-                     Popular, Fact, Touch, End, MiddleFirst, MiddleSecond, Last, Detail, Menu)
+                     Popular, Fact, Touch, End, MiddleFirst, MiddleSecond, Last, Detail, Menu, MeetingHeader, MeetingCategory)
 
 
 class ContactSerializer(serializers.ModelSerializer):
@@ -39,8 +39,18 @@ class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
         read_only_fields = ('id',)
-        fields = ['id', 'heading', 'title', 'category', 'invitation', 'price', 'month', 'day', 'division', 'first_text', 'second_text']
+        fields = ['id', 'title', 'invitation', 'price', 'month', 'day', 'division', 'first_text', 'second_text']
 
+class MeetingHeaderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MeetingHeader
+        fields = ['id', 'title']
+
+
+class MeetingCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MeetingCategory
+        fields = ['id', 'title']
 
 class MiddleSerializer(serializers.ModelSerializer):
     class Meta:

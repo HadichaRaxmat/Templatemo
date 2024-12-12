@@ -3,9 +3,12 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 from .views import (home_view, meetings_view, meeting_details_view, header_create, header_update, header_list,
-                    header_delete, menu_delete, menu_create, menu_update, menu_list, banner_list, banner_create, banner_update, banner_delete, carousel_create,
+                    header_delete, menu_delete, menu_create, menu_update, menu_list, banner_list, banner_create,
+                    banner_update, banner_delete, carousel_create,
                     carousel_list, carousel_update, carousel_delete, meeting_create, meeting_list, meeting_update,
-                    meeting_delete, middle_create, middle_delete, middle_list, middle_update, popular_delete,
+                    meeting_delete, meeting_header_create, meeting_header_delete, meeting_header_list,
+                    meeting_header_update,
+                    middle_create, middle_delete, middle_list, middle_update, popular_delete,
                     popular_list, popular_create, popular_update, fact_create, fact_update, fact_delete, fact_list,
                     touch_create, touch_delete, touch_list, touch_update, end_create, end_list, end_delete, end_update,
                     middlefirst_create, middlefirst_delete, middlefirst_update, middlefirst_list, middlesecond_create,
@@ -78,6 +81,11 @@ urlpatterns = [
     path('meeting/list/', meeting_list, name='meeting_list'),
     path('meeting/update/<int:pk>/', meeting_update, name='meeting_update'),
     path('meeting/delete/<int:pk>/', meeting_delete, name='meeting_delete'),
+    #meeting header
+    path('meeting/header/create/', meeting_header_create, name='meeting_header_create'),
+    path('meeting/header/list/', meeting_header_list, name='meeting_header_list'),
+    path('meeting/header/update/<int:pk>/', meeting_header_update, name='meeting_header_update'),
+    path('meeting/header/delete/<int:pk>/', meeting_header_delete, name='meeting_header_delete'),
     #middle
     path('middle/create/', middle_create, name='middle_create'),
     path('middle/list/', middle_list, name='middle_list'),

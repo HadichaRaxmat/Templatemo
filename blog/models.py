@@ -57,9 +57,7 @@ class Carousel(models.Model):
 
 
 class Meeting(models.Model):
-    heading = models.CharField(max_length=50)
     title = models.CharField(max_length=30)
-    category = models.CharField(max_length=20)
     invitation = models.CharField(max_length=20)
     price = models.CharField(max_length=20)
     month = models.CharField(max_length=15)
@@ -69,7 +67,7 @@ class Meeting(models.Model):
     second_text = models.CharField(max_length=30)
 
     def __str__(self):
-        return self.heading
+        return self.title
 
 
 class MeetingHeader(models.Model):

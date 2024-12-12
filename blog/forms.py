@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from .models import (Header, Banner, Carousel, Meeting, Middle, About, Popular, Fact, Touch, End, MiddleFirst,
-                     MiddleSecond, Last, Detail, Contact, UserContact, Menu)
+                     MiddleSecond, Last, Detail, Contact, UserContact, Menu, MeetingHeader, MeetingCategory)
 
 
 
@@ -19,6 +19,19 @@ class HeaderForm(forms.ModelForm):
     class Meta:
         model = Header
         fields = ['logo']
+
+
+class MeetingHeaderForm(forms.ModelForm):
+    class Meta:
+        model = MeetingHeader
+        fields = ['title']
+
+
+class MeetingCategoryForm(forms.ModelForm):
+    class Meta:
+        model = MeetingCategory
+        fields = ['title']
+
 
 
 class MenuForm(forms.ModelForm):
@@ -43,7 +56,7 @@ class MeetingForm(forms.ModelForm):
     class Meta:
         model = Meeting
         fields = [
-            'heading', 'title', 'category', 'invitation', 'price', 'month',
+            'title', 'invitation', 'price', 'month',
             'day', 'division', 'first_text', 'second_text'
         ]
 
