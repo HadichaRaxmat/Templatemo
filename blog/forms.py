@@ -1,18 +1,22 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import (Header, Banner, Carousel, Meeting, Middle, About, Popular, Fact, Touch, End, MiddleFirst,
-                     MiddleSecond, Last, Detail, Contact, UserContact, Menu, MeetingHeader, MeetingCategory)
+                     MiddleSecond, Last, Detail, Contact, UserContact, Menu, MeetingHeader, MeetingCategory, CustomUser)
+
+
+class CustomUserCreationUserForm(UserCreationForm):
+    email = forms.EmailField()
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'password1', 'password2')
 
 
 
-class LoginForm(AuthenticationForm):
-    username = forms.CharField(
-        max_length=254,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
-    )
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.EmailField(label="Email")
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'password')
 
 
 class HeaderForm(forms.ModelForm):
@@ -70,7 +74,7 @@ class MiddleForm(forms.ModelForm):
 class PopularForm(forms.ModelForm):
     class Meta:
         model = Popular
-        fields = ['title', 'text', 'price', 'photo']
+        fields = ['title', 'price', 'photo']
 
 
 class FactForm(forms.ModelForm):
@@ -127,7 +131,7 @@ class AboutForm(forms.ModelForm):
 class ContactForm(forms.ModelForm):
     class Meta:
         model = Contact
-        fields = ['title', 'first_contact', 'second_contact', 'third_contact', 'fourth_contact', 'last']
+        fields = ['title', 'last']
 
 class UserContactForm(forms.ModelForm):
     class Meta:

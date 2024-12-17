@@ -1,10 +1,13 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+from django.contrib.auth import logout
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from rest_framework.permissions import AllowAny
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView
 from .models import (Header, Banner, Carousel, Meeting, Middle, About, Popular, Fact, Touch, End, MiddleFirst,
-                     MiddleSecond, Last, Detail, Contact, UserContact, Menu)
+                     MiddleSecond, Last, Detail, Contact, UserContact, Menu, CustomUser)
 from .serializers import (HeaderSerializer, ContactSerializer, BannerSerializer, CarouselSerializer, MeetingSerializer,
                           MiddleSerializer, AboutSerializer, PopularSerializer, FactSerializer, TouchSerializer,
                           EndSerializer, MiddleFirstSerializer, MiddleSecondSerializer, LastSerializer,
@@ -12,7 +15,8 @@ from .serializers import (HeaderSerializer, ContactSerializer, BannerSerializer,
 from rest_framework.response import Response
 from .forms import (HeaderForm, BannerForm, CarouselForm, MeetingForm, MiddleForm, AboutForm, PopularForm, FactForm,
                     TouchForm, EndForm, MiddleFirstForm, MiddleSecondForm, LastForm, DetailForm, ContactForm,
-                    UserContactForm, MenuForm, MeetingHeader, MeetingHeaderForm)
+                    UserContactForm, MenuForm, MeetingHeader, MeetingHeaderForm, CustomAuthenticationForm,
+                    CustomUserCreationUserForm)
 
 
 def admin_view(request):
@@ -30,8 +34,12 @@ def dashboard3_view(request):
 def iframe_view(request):
     return render(request, 'admin/iframe.html')
 
-
+@login_required(login_url='/login/')
 def home_view(request):
+    if request.user.is_authenticated:
+        print(f"Authenticated user: {request.user}")
+    else:
+        print("User is not authenticated")
     header = Header.objects.all()
     contact = Contact.objects.all()
     banners = Banner.objects.all()
@@ -62,7 +70,7 @@ def home_view(request):
     }
     return render(request, 'index.html', context=d)
 
-
+@login_required(login_url='/login/')
 def meetings_view(request):
     header = Header.objects.all()
     first = MiddleFirst.objects.all()
@@ -76,7 +84,7 @@ def meetings_view(request):
     }
     return render(request, 'meetings.html', context=d)
 
-
+@login_required(login_url='/login/')
 def meeting_details_view(request):
     header = Header.objects.all()
     last = Last.objects.all()
@@ -91,6 +99,68 @@ def meeting_details_view(request):
     return render(request, 'meeting-details.html', context=d)
 
 
+def signup_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(
+                request, user
+            )
+            return redirect('login')
+    else:
+        form = CustomUserCreationUserForm()
+    return render(request, 'signup.html', {'form': form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(data=request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('/')
+    else:
+        form = CustomAuthenticationForm()
+
+    return render(request, 'signin.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+
+
+def users_list(request):
+    users = CustomUser.objects.all()
+    return render(request, 'admin/users.html', {'users': users})
+
+def user_update(request, pk):
+    user = get_object_or_404(CustomUser, id=pk)
+    if request.method == 'POST':
+        form = CustomUserCreationUserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('users')
+    else:
+        form = CustomUserCreationUserForm(instance=user)
+    return render(request, 'admin/user_update.html', {'form': form, 'user': user})
+
+
+
+def user_delete(request, pk):
+    user = get_object_or_404(CustomUser, id=pk)
+    if request.method == 'POST':
+        user.delete()
+        return redirect('users')
+    return render(request, 'admin/user_delete.html', {'user': user})
+
+
+
 def contact_view(request):
     if request.method == 'POST':
         data = request.POST
@@ -103,6 +173,8 @@ def contact_view(request):
 def contact_list_view(request):
     user_contacts = UserContact.objects.all()
     return render(request, 'admin/user_contact_list.html', {'user_contacts': user_contacts})
+
+
 
 def user_contact_update(request, pk):
     user_contact = get_object_or_404(UserContact, id=pk)
@@ -139,6 +211,7 @@ def contact_create(request):
 def contact_list(request):
     contacts = Contact.objects.all()
     return render(request, 'admin/contact_list.html', {'contacts': contacts})
+
 
 
 def contact_update(request, pk):
@@ -178,6 +251,7 @@ def header_create(request):
 def header_list(request):
     header = Header.objects.all()
     return render(request, 'admin/header_list.html', {'header': header})
+
 
 
 def header_update(request, pk):

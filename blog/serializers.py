@@ -7,7 +7,7 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         read_only_fields = ('id' ,)
-        fields = ['id', 'title', 'first_contact', 'second_contact', 'third_contact', 'fourth_contact', 'last']
+        fields = ['id', 'title', 'last']
 
 class HeaderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,7 +69,7 @@ class PopularSerializer(serializers.ModelSerializer):
     class Meta:
         model = Popular
         read_only_fields = ('id', )
-        fields = ['id', 'title', 'text', 'price', 'photo']
+        fields = ['id', 'title', 'price', 'photo']
 
 
 class FactSerializer(serializers.ModelSerializer):

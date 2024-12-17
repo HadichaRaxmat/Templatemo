@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Login</title>
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap">
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url("http://codingstella.com/wp-content/uploads/2024/01/download-6-scaled.jpeg") no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .wrapper {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 2em;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            width: 400px;
+            text-align: center;
+            color: #fff;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-box {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            outline: none;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .input-box input:focus {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 5px #fff;
+        }
+
+        .input-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .input-box i {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            background-color: #fff;
+            color: #333;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #ddd;
+        }
+
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h2>Login</h2>
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Поле Email -->
+            <div class="input-box">
+                {{ form.username }}
+                <i class='bx bx-envelope'></i>
+            </div>
+
+            <!-- Поле Пароль -->
+            <div class="input-box">
+                {{ form.password }}
+                <i class='bx bx-lock'></i>
+            </div>
+
+            <button type="submit">Login</button>
+            <div style="margin-top: 10px;">
+                <a href="#">Forgot password?</a> | <a href="/signup">Register</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+

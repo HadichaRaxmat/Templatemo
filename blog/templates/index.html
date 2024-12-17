@@ -1,7 +1,7 @@
 {% include 'header.html' %}
 {% load static %}
-<body>
-<!-- ***** Main Banner Area Start ***** -->
+
+  <!-- ***** Main Banner Area Start ***** -->
   <section class="section main-banner" id="top" data-section="section1">
       <video autoplay muted loop id="bg-video">
           <source src="{% static 'assets/images/course-video.mp4' %}" type="video/mp4" />
@@ -10,8 +10,8 @@
       <div class="video-overlay header-text">
           <div class="container">
             <div class="row">
+              {% for banner in banners %}
               <div class="col-lg-12">
-                {% for banner in banners %}
                 <div class="caption">
               <h6>{{ banner.main }}</h6>
               <h2>{{ banner.title }}</h2>
@@ -19,26 +19,27 @@
               <div class="main-button-red">
                   <div class="scroll-to-section"><a href="#contact">{{ banner.last }}</a></div>
               </div>
+              {% endfor %}
           </div>
-                {% endfor %}
               </div>
             </div>
           </div>
       </div>
   </section>
-<!-- ***** Main Banner Area End ***** -->
+  <!-- ***** Main Banner Area End ***** -->
 
   <section class="services">
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
           <div class="owl-service-item owl-carousel">
+
             <div class="item">
               <div class="icon">
-                {% for carousel in carousels %}
                 <img src="{% static 'assets/images/service-icon-01.png' %}" alt="">
               </div>
               <div class="down-content">
+                {% for carousel in carousels %}
                 <h4>{{ carousel.title }}</h4>
                 <p>{{ carousel.text }}</p>
                 {% endfor %}
@@ -53,31 +54,33 @@
   <section class="upcoming-meetings" id="meetings">
     <div class="container">
       <div class="row">
+        {% for meeting in meetingheader %}
         <div class="col-lg-12">
-          {% for m in meetingheader %}
           <div class="section-heading">
-            <h2>{{ m.title }}</h2>
-            {% endfor %}
+            <h2>{{ meeting.title }}</h2>
           </div>
         </div>
+        {% endfor %}
         <div class="col-lg-4">
           <div class="categories">
-            {% for meeting in meetings %}
             <h4>{{ meeting.title }}</h4>
             <ul>
-              <li><a href="#">{{ meeting.category }}</a></li>
+              <li><a href="#">Sed tempus enim leo</a></li>
+              <li><a href="#">Aenean molestie quis</a></li>
+              <li><a href="#">Cras et metus vestibulum</a></li>
+              <li><a href="#">Nam et condimentum</a></li>
+              <li><a href="#">Phasellus nec sapien</a></li>
             </ul>
             <div class="main-button-red">
-              <a href="/meetings">{{ meeting.invitation }}</a>
+              <a href="meetings.html">{{ meeting.invitation }}</a>
             </div>
           </div>
-          {% endfor %}
         </div>
         <div class="col-lg-8">
           <div class="row">
+            {% for meeting in meetings %}
             <div class="col-lg-6">
               <div class="meeting-item">
-                {% for meeting in meetings %}
                 <div class="thumb">
                   <div class="price">
                     <span>{{ meeting.price }}</span>
@@ -88,12 +91,12 @@
                   <div class="date">
                     <h6>{{ meeting.month }} <span>{{ meeting.day }}</span></h6>
                   </div>
-                  <a href="/meeting/details"><h4>{{ meeting.division }}</h4></a>
+                  <a href="/meeting-/details"><h4>{{ meeting.division }}</h4></a>
                   <p>{{ meeting.first_text }}<br>{{ meeting.second_text }}</p>
                 </div>
-                {% endfor %}
               </div>
             </div>
+            {% endfor %}
           </div>
         </div>
       </div>
@@ -106,23 +109,23 @@
         <div class="col-lg-6 align-self-center">
           <div class="row">
             <div class="col-lg-12">
-              {% for middle in middles %}
               <div class="item">
+                {% for middle in middles %}
                 <h3>{{ middle.title }}</h3>
                 <p>{{ middle.text }}</p>
                 <div class="main-button-red">
                   <div class="scroll-to-section"><a href="#contact">{{ middle.last }}</a></div>
               </div>
+                {% endfor %}
               </div>
-              {% endfor %}
             </div>
           </div>
         </div>
         <div class="col-lg-6">
+          {% for ab in about %}
           <div class="accordions is-first-expanded">
             <article class="accordion">
                 <div class="accordion-head">
-                  {% for ab in about %}
                     <span>{{ ab.title }}</span>
                     <span class="icon">
                         <i class="icon fa fa-chevron-right"></i>
@@ -130,12 +133,12 @@
                 </div>
                 <div class="accordion-body">
                     <div class="content">
-                        <p>{{ ab.text }}</p>
+                        <p>{{ about.text }}</p>
                     </div>
-                  {% endfor %}
                 </div>
             </article>
         </div>
+          {% endfor %}
         </div>
       </div>
     </div>
@@ -146,16 +149,16 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="section-heading">
-            <h2>Наши популярные курсы</h2>
+            <h2>Our Popular Courses</h2>
           </div>
         </div>
         <div class="col-lg-12">
           <div class="owl-courses-item owl-carousel">
-            {% for pop in popular %}
             <div class="item">
+              {% for pop in popular %}
               <img src="{{ pop.photo.url }}" alt="Course One">
               <div class="down-content">
-                <h4>{{ pop.text }}</h4>
+                <h4>{{ pop.title }}</h4>
                 <div class="info">
                   <div class="row">
                     <div class="col-8">
@@ -173,36 +176,36 @@
                   </div>
                 </div>
               </div>
+              {% endfor %}
             </div>
-            {% endfor %}
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="our-facts">
+   <section class="our-facts">
     <div class="container">
       <div class="row">
         <div class="col-lg-6">
           <div class="row">
+            {% for fact in facts %}
             <div class="col-lg-12">
-              {% for fact in facts %}
               <h2>{{ fact.title }}</h2>
             </div>
             <div class="col-lg-6">
               <div class="row">
                 <div class="col-12">
-                  <div class="count-area-content new-students">
+                  <div class="count-area-content percentage">
                     <div class="count-digit">{{ fact.indicator }}</div>
                     <div class="count-title">{{ fact.text }}</div>
                   </div>
                 </div>
               </div>
-              {% endfor %}
             </div>
+            {% endfor %}
           </div>
-        </div> 
+        </div>
         <div class="col-lg-6 align-self-center">
           <div class="video">
             <a href="https://www.youtube.com/watch?v=HndV87XpkWg" target="_blank"><img src="{% static 'assets/images/play-icon.png' %}" alt=""></a>
@@ -212,13 +215,13 @@
     </div>
   </section>
 
-  <section class="contact-us" id="contact">
+  <section class="contact-us" id="contact_us">
     <div class="container">
       <div class="row">
         <div class="col-lg-9 align-self-center">
           <div class="row">
             <div class="col-lg-12">
-              <form id="contact" action="contact/" method="post">
+              <form id="contact" action="/contact/" method="post">
                 {% csrf_token %}
                 <div class="row">
                   <div class="col-lg-12">
@@ -233,25 +236,23 @@
                   </div>
                   <div class="col-lg-4">
                     <fieldset>
-                    <input name="email" type="text" id="email" pattern="[^ @]*@[^ @]*" placeholder="YOUR EMAIL..." required="">
+                    <input name="phone" type="text" id="phone" placeholder="YOUR PHONE..." required="">
                   </fieldset>
                   </div>
                   <div class="col-lg-4">
                     <fieldset>
-                      <input name="phone" type="text" id="phone" placeholder="PHONE NUMBER...*" required="">
+                      <input name="email" type="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="EMAIL...*" required="">
                     </fieldset>
                   </div>
                   <div class="col-lg-12">
                     <fieldset>
-                      <textarea name="message" type="text" class="form-control" id="message" placeholder="YOUR MESSAGE..." required=""></textarea>
+                      <textarea name="message" class="form-control" id="message" placeholder="YOUR MESSAGE..." required=""></textarea>
                     </fieldset>
                   </div>
                   <div class="col-lg-12">
-                    {% for c in contact %}
                     <fieldset>
-                      <button type="submit" id="form-submit" class="button">{{ c.last }}</button>
+                      <button type="submit" id="form-submit" class="button">SEND MESSAGE NOW</button>
                     </fieldset>
-                    {% endfor %}
                   </div>
                 </div>
               </form>
@@ -259,10 +260,10 @@
           </div>
         </div>
         <div class="col-lg-3">
-          {% for t in touch %}
           <div class="right-info">
             <ul>
               <li>
+                {% for t in touch %}
                 <h6>{{ t.first_method }}</h6>
                 <span>{{ t.first }}</span>
               </li>
@@ -277,13 +278,13 @@
               <li>
                 <h6>{{ t.fourth_method }}</h6>
                 <span>{{ t.fourth }}</span>
+                {% endfor %}
               </li>
             </ul>
           </div>
-          {% endfor %}
         </div>
       </div>
     </div>
     {% include 'footer.html' %}
   </section>
-</body>
+

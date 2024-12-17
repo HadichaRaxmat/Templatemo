@@ -4,10 +4,10 @@ from drf_yasg import openapi
 from rest_framework import permissions
 from .views import (home_view, meetings_view, meeting_details_view, header_create, header_update, header_list,
                     header_delete, menu_delete, menu_create, menu_update, menu_list, banner_list, banner_create,
-                    banner_update, banner_delete, carousel_create,
+                    banner_update, banner_delete, carousel_create, login_view, signup_view,
                     carousel_list, carousel_update, carousel_delete, meeting_create, meeting_list, meeting_update,
                     meeting_delete, meeting_header_create, meeting_header_delete, meeting_header_list,
-                    meeting_header_update,
+                    meeting_header_update, user_update, user_delete, users_list, logout_view,
                     middle_create, middle_delete, middle_list, middle_update, popular_delete,
                     popular_list, popular_create, popular_update, fact_create, fact_update, fact_delete, fact_list,
                     touch_create, touch_delete, touch_list, touch_update, end_create, end_list, end_delete, end_update,
@@ -36,7 +36,7 @@ schema_view = get_schema_view(
         license=openapi.License(name="BSD License"),
     ),
     public=True,
-    permission_classes=[permissions.AllowAny],  # Убедитесь, что разрешения настроены
+    permission_classes=[permissions.AllowAny],
 )
 
 urlpatterns = [
@@ -48,6 +48,14 @@ urlpatterns = [
     path('meetings/', meetings_view),
     path('meeting/details', meeting_details_view),
     path('contact/', contact_view, name='contact'),
+    path('login/', login_view, name='login'),
+    path('signup/', signup_view, name='signup'),
+    path('logout/', logout_view, name='logout'),
+    #user
+    path('users/', users_list, name='users'),
+    path('user/update/<int:pk>/', user_update, name='user_update'),
+    path('user/delete/<int:pk>/', user_delete, name='user_delete'),
+    #user contact
     path('user/contact/list/', contact_list_view, name='user_contact_list'),
     path('user/contact/update/<int:pk>/', user_contact_update, name='user_contact_update'),
     path('user/contact/delete/<int:pk>/', user_contact_delete, name='user_contact_delete'),

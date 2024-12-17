@@ -1,5 +1,13 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+    username = None
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
 class UserContact(models.Model):
     name = models.CharField(max_length=30)
@@ -13,14 +21,10 @@ class UserContact(models.Model):
 
 class Contact(models.Model):
     title = models.CharField(max_length=50)
-    first_contact = models.CharField(max_length=20)
-    second_contact = models.CharField(max_length=20)
-    third_contact = models.CharField(max_length=20)
-    fourth_contact = models.CharField(max_length=20)
     last = models.CharField(max_length=30)
 
     def __str__(self):
-        return self.first_contact
+        return self.title
 
 
 class Header(models.Model):
@@ -103,8 +107,7 @@ class About(models.Model):
 
 class Popular(models.Model):
     title = models.CharField(max_length=30)
-    text = models.CharField(max_length=20)
-    price = models.CharField(max_length=15)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     photo = models.ImageField(upload_to='popular_photos/', blank=True, null=True)
 
     def __str__(self):
