@@ -1,11 +1,14 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from rest_framework.permissions import AllowAny
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from .models import (Header, Banner, Carousel, Meeting, Middle, About, Popular, Fact, Touch, End, MiddleFirst,
                      MiddleSecond, Last, Detail, Contact, UserContact, Menu, CustomUser)
 from .serializers import (HeaderSerializer, ContactSerializer, BannerSerializer, CarouselSerializer, MeetingSerializer,
@@ -16,25 +19,128 @@ from rest_framework.response import Response
 from .forms import (HeaderForm, BannerForm, CarouselForm, MeetingForm, MiddleForm, AboutForm, PopularForm, FactForm,
                     TouchForm, EndForm, MiddleFirstForm, MiddleSecondForm, LastForm, DetailForm, ContactForm,
                     UserContactForm, MenuForm, MeetingHeader, MeetingHeaderForm, CustomAuthenticationForm,
-                    CustomUserCreationUserForm)
+                    CustomUserCreationUserForm, AdminUserCreationForm, AdminUserAuthenticationForm)
 
 
+
+def admin_login(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+
+    form = AdminUserAuthenticationForm(data=request.POST or None)
+    if form.is_valid():
+        username_or_email = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+
+        user = authenticate(request, username=username_or_email, password=password)
+        if user and (user.is_staff or user.is_superuser):
+            login(request, user)
+            return redirect('dashboard')
+        else:
+            messages.error(request, "Invalid credentials or insufficient permissions.")
+
+    return render(request, 'admin/admin_signin.html', {'form': form})
+
+def admin_logout(request):
+    logout(request)
+    return redirect('admin_login')
+
+@login_required(login_url='/admin/')
+def admin_list(request):
+    users = CustomUser.objects.filter(is_staff=True)
+    return render(request, 'admin/admin_list.html', {'users': users})
+
+
+@login_required(login_url='/admin/')
+def admin_create(request):
+    if not request.user.is_superuser:
+        messages.error(request, "You do not have permission to create an admin.")
+        return redirect('dashboard')
+
+    if request.method == "POST":
+        form = AdminUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_staff = True
+            user.is_admin = True
+            user.save()
+            messages.success(request, f"Admin {user.email} created successfully.")
+            return redirect('admin_list')
+
+    else:
+        form = AdminUserCreationForm()
+
+    return render(request, 'admin/admin_create.html', {'form': form})
+
+
+@login_required(login_url='/admin/')
+def admin_update(request, user_id):
+    CustomUser = get_user_model()
+    user = get_object_or_404(CustomUser, id=user_id)
+
+    if not request.user.is_superuser:
+        messages.error(request, "You are not authorized to edit admin users.")
+        return redirect('admin_list')
+
+    if request.method == 'POST':
+        form = AdminUserCreationForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Admin details updated successfully.")
+            return redirect('admin_list')
+    else:
+        form = AdminUserCreationForm(instance=user)
+
+    return render(request, 'admin/admin_update.html', {'form': form})
+
+
+
+
+@login_required(login_url='/admin/')
+def admin_delete(request, user_id):
+    CustomUser = get_user_model()
+    user = get_object_or_404(CustomUser, id=user_id)
+
+    if not request.user.is_superuser:
+        messages.error(request, "You are not authorized to delete admin users.")
+        return redirect('admin_list')
+
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, "Admin user deleted successfully.")
+        return redirect('admin_list')
+
+    # Для GET запроса показываем страницу подтверждения удаления
+    return render(request, 'admin/admin_delete.html', {'admin': user})
+
+
+@login_required(login_url='/admin/')
 def admin_view(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        return redirect('admin_login')
     return render(request, 'admin/index.html')
 
 
+
+@login_required(login_url='/admin/')
 def dashboard2_view(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        return redirect('admin_login')
     return render(request, 'admin/index2.html')
 
-
+@login_required(login_url='/admin/')
 def dashboard3_view(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        return redirect('admin_login')
     return render(request, 'admin/index3.html')
 
-
+@login_required(login_url='/admin/')
 def iframe_view(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        return redirect('admin_login')
     return render(request, 'admin/iframe.html')
 
-@login_required(login_url='/login/')
+
 def home_view(request):
     if request.user.is_authenticated:
         print(f"Authenticated user: {request.user}")
@@ -53,6 +159,7 @@ def home_view(request):
     end = End.objects.all()
     menu = Menu.objects.all()
     meetingheader = MeetingHeader.objects.all()
+    admins = CustomUser.objects.all()
     d = {
         'header': header,
         'contact': contact,
@@ -66,7 +173,8 @@ def home_view(request):
         'touch': touch,
         'end': end,
         'menu': menu,
-        'meetingheader': meetingheader
+        'meetingheader': meetingheader,
+        'admins': admins
     }
     return render(request, 'index.html', context=d)
 
@@ -104,9 +212,10 @@ def signup_view(request):
         form = CustomUserCreationUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(
-                request, user
-            )
+
+            login(request, user,
+                  backend='django.contrib.auth.backends.ModelBackend')
+
             return redirect('login')
     else:
         form = CustomUserCreationUserForm()
@@ -131,7 +240,11 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('/')
+
+
+def profile_view(request):
+    return render(request, 'account.html')
 
 
 

@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{% static 'assets/css/templatemo-edu-meeting.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/owl.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/lightbox.css' %}">
+
 <!--
 
 TemplateMo 569 Edu Meeting
@@ -49,45 +50,59 @@ https://templatemo.com/tm-569-edu-meeting
     </div>
   </div>
 
-  <!-- ***** Header Area Start ***** -->
-  <header class="header-area header-sticky">
-      <div class="container">
-          <div class="row">
-              <div class="col-12">
-                  <nav class="main-nav">
-                      <!-- ***** Logo Start ***** -->
-                      <a href="/" class="logo">
-                          {% for head in header %}
-                          {{ head.logo }}
-                          {% endfor %}
-                      </a>
-                      <!-- ***** Logo End ***** -->
-                      <!-- ***** Menu Start ***** -->
-                      <ul class="nav">
-                          {% for m in menu %}
-                          <li class="scroll-to-section"><a href="/" class="active">{{ m.menu }}</a></li>
-                          {% endfor %}
-                          {% for m in menu %}
-                          <li><a href="/meetings"></a></li>
-                          {% endfor %}
-                          <li class="scroll-to-section"><a href="#apply">Подать заявку</a></li>
-                          <li class="has-sub">
-                              <a href="javascript:void(0)">Страницы</a>
-                              <ul class="sub-menu">
-                                  <li><a href="/meetings">Предстоящие встречи</a></li>
-                                  <li><a href="/meeting/details">Детали встречи</a></li>
-                              </ul>
-                          </li>
-                          <li class="scroll-to-section"><a href="#courses">Курсы</a></li>
-                          <li class="scroll-to-section"><a href="#contact">Контакты</a></li>
-                      </ul>
-                      <a class='menu-trigger'>
-                          <span>Menu</span>
-                      </a>
-                      <!-- ***** Menu End ***** -->
-                  </nav>
-              </div>
-          </div>
-      </div>
-  </header>
-  <!-- ***** Header Area End ***** -->
+<!-- ***** Header Area Start ***** -->
+<header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="/" class="logo">
+                        {% for head in header %}
+                        {{ head.logo }}
+                        {% endfor %}
+                    </a>
+                    <!-- ***** Logo End ***** -->
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="nav">
+                        <!-- Генерация элементов меню из контекста -->
+                        {% for m in menu %}
+                            <li class="scroll-to-section">
+                                <a href="/" class="active">{{ m.menu }}</a>
+                            </li>
+                        {% endfor %}
+                        <!-- Статические ссылки -->
+                        <li class="scroll-to-section"><a href="#apply">Подать заявку</a></li>
+                        <li class="has-sub">
+                            <a href="javascript:void(0)">Страницы</a>
+                            <ul class="sub-menu">
+                                <li><a href="/meetings">Предстоящие встречи</a></li>
+                                <li><a href="/meeting/details">Детали встречи</a></li>
+                            </ul>
+                        </li>
+                        <li class="scroll-to-section"><a href="#courses">Курсы</a></li>
+                        <li class="scroll-to-section"><a href="#contact">Контакты</a></li>
+                    </ul>
+                    <!-- Блок для авторизации справа -->
+                    <ul class="auth-links">
+                        {% if user.is_authenticated %}
+                            <li><a href="/profile">{{ user.username }}</a></li>
+                            <li><a href="/logout">Выйти</a></li>
+                        {% else %}
+                            <li><a href="/login">Войти</a></li>
+                            <li><a href="/signup">Зарегистрироваться</a></li>
+                        {% endif %}
+                    </ul>
+                    <!-- Кнопка-триггер для мобильного меню -->
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- ***** Header Area End ***** -->
+
+
+

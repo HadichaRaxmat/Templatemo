@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 AUTHENTICATION_BACKENDS = [
+    'blog.authentication_backends.EmailOrUsernameBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -125,6 +126,8 @@ USE_TZ = True
 
 
 AUTH_USER_MODEL = 'blog.CustomUser'
+
+
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 

@@ -16,14 +16,14 @@ from .views import (home_view, meetings_view, meeting_details_view, header_creat
                     last_update, last_create, detail_update, detail_create, detail_list, detail_delete, about_update,
                     about_list, about_delete, about_create, dashboard2_view, dashboard3_view, iframe_view,
                     contact_create, contact_delete, contact_update, contact_view, contact_list, contact_list_view,
-                    user_contact_update, user_contact_delete, HeaderListAPIView, HeaderDetailAPIView,
+                    user_contact_update, user_contact_delete, HeaderListAPIView, HeaderDetailAPIView, admin_logout,
                     ContactListAPIView, ContactDetailAPIView, BannerListAPIView, BannerDetailAPIView,
-                    CarouselListAPIView, CarouselDetailAPIView, MeetingListAPIView, MeetingDetailAPIView,
+                    CarouselListAPIView, CarouselDetailAPIView, MeetingListAPIView, MeetingDetailAPIView, admin_create,
                     MiddleListAPIView, MiddleDetailAPIView, AboutDetailAPIView, AboutListAPIView, PopularListAPIView,
                     PopularDetailAPIView, FactDetailAPIView,FactListAPIView, TouchDetailAPIView, TouchListAPIView,
-                    EndDetailAPIView, EndListAPIView, MiddleFirstDetailAPIView, MiddleFirstListAPIView,
-                    MiddleSecondListAPIView, MiddleSecondDetailAPIView, LastDetailAPIView, LastListAPIView,
-                    DetailListAPIView, DetailDetailAPIView, MenuDetailAPIView, MenuListAPIView)
+                    EndDetailAPIView, EndListAPIView, MiddleFirstDetailAPIView, MiddleFirstListAPIView, admin_list, admin_delete,
+                    MiddleSecondListAPIView, MiddleSecondDetailAPIView, LastDetailAPIView, LastListAPIView, admin_update,
+                    DetailListAPIView, DetailDetailAPIView, MenuDetailAPIView, MenuListAPIView, admin_view)
 
 
 schema_view = get_schema_view(
@@ -42,6 +42,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     # HTML
     path('', home_view),
+    path('dashboard/', admin_view, name='dashboard'),
     path('dashboard2/', dashboard2_view),
     path('dashboard3', dashboard3_view),
     path('iframe/', iframe_view),
@@ -51,6 +52,12 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('signup/', signup_view, name='signup'),
     path('logout/', logout_view, name='logout'),
+    #admin
+    path('admin/list/', admin_list, name='admin_list'),
+    path('admin/create/', admin_create, name='admin_create'),
+    path('admin/update/<int:user_id>/', admin_update, name='admin_update'),
+    path('admin/delete/<int:user_id>/', admin_delete, name='admin_delete'),
+    path('admin/logout/', admin_logout, name='admin_logout'),
     #user
     path('users/', users_list, name='users'),
     path('user/update/<int:pk>/', user_update, name='user_update'),
