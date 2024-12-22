@@ -19,14 +19,11 @@ from rest_framework.response import Response
 from .forms import (HeaderForm, BannerForm, CarouselForm, MeetingForm, MiddleForm, AboutForm, PopularForm, FactForm,
                     TouchForm, EndForm, MiddleFirstForm, MiddleSecondForm, LastForm, DetailForm, ContactForm,
                     UserContactForm, MenuForm, MeetingHeader, MeetingHeaderForm, CustomAuthenticationForm,
-                    CustomUserCreationUserForm, AdminUserCreationForm, AdminUserAuthenticationForm)
+                    CustomUserCreationUserForm, AdminUserCreationForm, AdminUserAuthenticationForm, UserProfileForm)
 
 
 
 def admin_login(request):
-    if request.user.is_authenticated:
-        return redirect('dashboard')
-
     form = AdminUserAuthenticationForm(data=request.POST or None)
     if form.is_valid():
         username_or_email = form.cleaned_data['username']
@@ -40,6 +37,7 @@ def admin_login(request):
             messages.error(request, "Invalid credentials or insufficient permissions.")
 
     return render(request, 'admin/admin_signin.html', {'form': form})
+
 
 def admin_logout(request):
     logout(request)
@@ -243,8 +241,22 @@ def logout_view(request):
     return redirect('/')
 
 
-def profile_view(request):
-    return render(request, 'account.html')
+@login_required(login_url='/login/')
+def user_profile(request):
+    user = request.user
+
+    if request.method == 'POST' and request.FILES:
+        form = UserProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+        else:
+
+            print(form.errors)
+    else:
+        form = UserProfileForm(instance=user)
+
+    return render(request, 'index.html', {'form': form})
 
 
 

@@ -1,0 +1,21 @@
+.auth-links {
+    display: flex;
+    justify-content: flex-start; /* Выравнивание по левому краю */
+    align-items: center; /* Центрирование по вертикали */
+    list-style: none; /* Убирает маркеры списка */
+    padding: 0;
+}
+
+.auth-links li {
+    margin-right: 20px; /* Отступы между элементами */
+}
+
+.auth-links .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px; /* Расстояние между аватаркой и email */
+}
+#avatarUpload {
+    display: none; /* Скрыть сам input */
+}

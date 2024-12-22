@@ -106,6 +106,11 @@ class AdminUserAuthenticationForm(AuthenticationForm):
         return cleaned_data
 
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['avatar']
+
 
 class HeaderForm(forms.ModelForm):
     class Meta:

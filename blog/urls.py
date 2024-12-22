@@ -23,7 +23,7 @@ from .views import (home_view, meetings_view, meeting_details_view, header_creat
                     PopularDetailAPIView, FactDetailAPIView,FactListAPIView, TouchDetailAPIView, TouchListAPIView,
                     EndDetailAPIView, EndListAPIView, MiddleFirstDetailAPIView, MiddleFirstListAPIView, admin_list, admin_delete,
                     MiddleSecondListAPIView, MiddleSecondDetailAPIView, LastDetailAPIView, LastListAPIView, admin_update,
-                    DetailListAPIView, DetailDetailAPIView, MenuDetailAPIView, MenuListAPIView, admin_view)
+                    DetailListAPIView, DetailDetailAPIView, MenuDetailAPIView, MenuListAPIView, admin_view, user_profile)
 
 
 schema_view = get_schema_view(
@@ -52,6 +52,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('signup/', signup_view, name='signup'),
     path('logout/', logout_view, name='logout'),
+    path('user/profile/', user_profile, name='profile'),
     #admin
     path('admin/list/', admin_list, name='admin_list'),
     path('admin/create/', admin_create, name='admin_create'),

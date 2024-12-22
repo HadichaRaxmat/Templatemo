@@ -16,6 +16,7 @@
                     <th><i class="fas fa-user"></i> Username</th>
                     <th><i class="fas fa-envelope"></i> Email</th>
                     <th><i class="fas fa-user-shield"></i> Status</th>
+                    <th><i class="fas fa-user-shield"></i> Avatar</th>
                     <th><i class="fas fa-cogs"></i> Actions</th>
                 </tr>
             </thead>
@@ -32,6 +33,7 @@
                             <span class="badge badge-info">Admin</span>
                         {% endif %}
                     </td>
+                    <td>{{ user.avatar }}</td>
                     <td class="text-center">
                         <a href="{% url 'admin_update' user.pk %}" class="btn btn-sm btn-outline-info" title="Edit">
                             <i class="fas fa-edit"></i>
