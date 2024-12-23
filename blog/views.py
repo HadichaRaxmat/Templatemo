@@ -8,7 +8,6 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
 from .models import (Header, Banner, Carousel, Meeting, Middle, About, Popular, Fact, Touch, End, MiddleFirst,
                      MiddleSecond, Last, Detail, Contact, UserContact, Menu, CustomUser)
 from .serializers import (HeaderSerializer, ContactSerializer, BannerSerializer, CarouselSerializer, MeetingSerializer,
@@ -120,24 +119,6 @@ def admin_view(request):
 
 
 
-@login_required(login_url='/admin/')
-def dashboard2_view(request):
-    if not (request.user.is_staff or request.user.is_superuser):
-        return redirect('admin_login')
-    return render(request, 'admin/index2.html')
-
-@login_required(login_url='/admin/')
-def dashboard3_view(request):
-    if not (request.user.is_staff or request.user.is_superuser):
-        return redirect('admin_login')
-    return render(request, 'admin/index3.html')
-
-@login_required(login_url='/admin/')
-def iframe_view(request):
-    if not (request.user.is_staff or request.user.is_superuser):
-        return redirect('admin_login')
-    return render(request, 'admin/iframe.html')
-
 
 def home_view(request):
     if request.user.is_authenticated:
@@ -229,7 +210,10 @@ def login_view(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('/')
+                if user.is_superuser or user.is_staff:
+                    return redirect('dashboard')
+                else:
+                    return redirect('/')
     else:
         form = CustomAuthenticationForm()
 
@@ -261,7 +245,7 @@ def user_profile(request):
 
 
 def users_list(request):
-    users = CustomUser.objects.all()
+    users = CustomUser.objects.filter(is_superuser=False, is_staff=False)
     return render(request, 'admin/users.html', {'users': users})
 
 def user_update(request, pk):

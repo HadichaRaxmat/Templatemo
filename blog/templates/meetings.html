@@ -1,16 +1,15 @@
-{% include 'header.html' %}
 {% load static %}
-
+{% include 'header.html' %}
 
 <section class="heading-page header-text" id="top">
     <div class="container">
       <div class="row">
+        {% for f in first %}
         <div class="col-lg-12">
-          {% for f in first %}
           <h6>{{ f.title }} </h6>
           <h2>{{ f.text }}</h2>
-          {% endfor %}
         </div>
+        {% endfor %}
       </div>
     </div>
   </section>
@@ -23,9 +22,7 @@
             <div class="col-lg-12">
               <div class="filters">
                 <ul>
-                  {% for s in second %}
-                  <li data-filter="*"  class="active">{{ s.category }}</li>
-                  {% endfor %}
+                  <li data-filter="*"  class="active">All Meetings</li>
                 </ul>
               </div>
             </div>
@@ -33,23 +30,21 @@
               <div class="row grid">
                 <div class="col-lg-4 templatemo-item-col all soon">
                   <div class="meeting-item">
+                    {% for s in second %}
                     <div class="thumb">
                       <div class="price">
-                        {% for s in second %}
                         <span>{{ s.price }}</span>
-                        {% endfor %}
                       </div>
                       <a href="meeting-details.html"><img src="{% static 'assets/images/meeting-01.jpg' %}" alt=""></a>
                     </div>
                     <div class="down-content">
                       <div class="date">
-                        {% for s in second %}
-                        <h6>{{ s.month }} <span>{{ s.day }}</span></h6>
+                        <h6>{{ s.month }}<span>{{ s.day }}</span></h6>
                       </div>
                       <a href="meeting-details.html"><h4>{{ s.title }}</h4></a>
                       <p>{{ s.text }}</p>
-                      {% endfor %}
                     </div>
+                    {% endfor %}
                   </div>
                 </div>
               </div>
@@ -69,5 +64,4 @@
       </div>
     </div>
     {% include 'footer.html' %}
-  </section>
-
+</section>

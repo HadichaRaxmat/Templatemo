@@ -1,0 +1,33 @@
+/* Для секции */
+.heading-page {
+    min-height: 200px; /* Минимальная высота секции */
+    padding: 20px 0;   /* Внутренний отступ */
+    background-color: #f8f9fa; /* Фон для визуального разделения */
+}
+
+/* Для блока контента */
+.content-block {
+    margin-bottom: 20px; /* Отступ между блоками */
+}
+
+/* Для заголовков */
+.title {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 2rem;
+    color: #343a40;
+}
+
+/* Для адаптивности */
+@media (max-width: 768px) {
+    .title {
+        font-size: 1rem;
+    }
+    .subtitle {
+        font-size: 1.5rem;
+    }
+}
