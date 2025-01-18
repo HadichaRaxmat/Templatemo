@@ -101,13 +101,13 @@ class Carousel(models.Model):
 
 class Meeting(models.Model):
     title = models.CharField(max_length=30)
-    invitation = models.CharField(max_length=20)
+    invitation = models.CharField(max_length=50)
     price = models.CharField(max_length=20)
     month = models.CharField(max_length=15)
     day = models.CharField(max_length=5)
-    division = models.CharField(max_length=20)
-    first_text = models.CharField(max_length=30)
-    second_text = models.CharField(max_length=30)
+    division = models.CharField(max_length=50)
+    first_text = models.CharField(max_length=50)
+    second_text = models.CharField(max_length=50)
     photo = models.ImageField(upload_to='meeting_photos/', blank=True, null=True)
 
     def __str__(self):
@@ -145,8 +145,8 @@ class About(models.Model):
 
 
 class Popular(models.Model):
-    title = models.CharField(max_length=30)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    title = models.CharField(max_length=50)
+    price = models.CharField(max_length=30)
     photo = models.ImageField(upload_to='popular_photos/', blank=True, null=True)
 
     def __str__(self):
