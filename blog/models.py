@@ -108,7 +108,7 @@ class Meeting(models.Model):
     division = models.CharField(max_length=50)
     first_text = models.CharField(max_length=50)
     second_text = models.CharField(max_length=50)
-    photo = models.ImageField(upload_to='meeting_photos/', blank=True, null=True)
+    photo = models.ImageField(upload_to='blog/meeting_photos/', blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -147,7 +147,7 @@ class About(models.Model):
 class Popular(models.Model):
     title = models.CharField(max_length=50)
     price = models.CharField(max_length=30)
-    photo = models.ImageField(upload_to='popular_photos/', blank=True, null=True)
+    photo = models.ImageField(upload_to='blog/popular_photos/', blank=True, null=True)
 
     def __str__(self):
         return self.title
