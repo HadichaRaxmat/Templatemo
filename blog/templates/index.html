@@ -30,39 +30,39 @@
 
   <section class="services">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="owl-service-item owl-carousel">
-
-            <div class="item">
-              <div class="icon">
-                <img src="{% static 'assets/images/service-icon-01.png' %}" alt="">
-              </div>
-              <div class="down-content">
-                {% for carousel in carousels %}
-                <h4>{{ carousel.title }}</h4>
-                <p>{{ carousel.text }}</p>
-                {% endfor %}
-              </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="owl-service-item owl-carousel">
+                    {% for carousel in carousels %}
+                    <div class="item">
+                        <div class="icon">
+                            <img src="{% static 'assets/images/service-icon-01.png' %}" alt="">
+                        </div>
+                        <div class="down-content">
+                            <h4>{{ carousel.title }}</h4>
+                            <p>{{ carousel.text }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </section>
+</section>
 
   <section class="upcoming-meetings" id="meetings">
     <div class="container">
       <div class="row">
-        {% for meeting in meetingheader %}
+        {% for meetinghead in meetingheader %}
         <div class="col-lg-12">
           <div class="section-heading">
-            <h2>{{ meeting.title }}</h2>
+            <h2>{{ meetinghead.title }}</h2>
           </div>
         </div>
         {% endfor %}
         <div class="col-lg-4">
           <div class="categories">
+            {% for meeting in meetings %}
             <h4>{{ meeting.title }}</h4>
             <ul>
               <li><a href="#">Sed tempus enim leo</a></li>
@@ -74,6 +74,7 @@
             <div class="main-button-red">
               <a href="meetings.html">{{ meeting.invitation }}</a>
             </div>
+            {% endfor %}
           </div>
         </div>
         <div class="col-lg-8">
@@ -91,7 +92,7 @@
                   <div class="date">
                     <h6>{{ meeting.month }} <span>{{ meeting.day }}</span></h6>
                   </div>
-                  <a href="/meeting-/details"><h4>{{ meeting.division }}</h4></a>
+                  <a href="/meeting/details"><h4>{{ meeting.division }}</h4></a>
                   <p>{{ meeting.first_text }}<br>{{ meeting.second_text }}</p>
                 </div>
               </div>
@@ -122,8 +123,8 @@
           </div>
         </div>
         <div class="col-lg-6">
-          {% for ab in about %}
           <div class="accordions is-first-expanded">
+            {% for ab in about %}
             <article class="accordion">
                 <div class="accordion-head">
                     <span>{{ ab.title }}</span>
@@ -133,12 +134,12 @@
                 </div>
                 <div class="accordion-body">
                     <div class="content">
-                        <p>{{ about.text }}</p>
+                        <p>{{ ab.text }}</p>
                     </div>
                 </div>
             </article>
+            {% endfor %}
         </div>
-          {% endfor %}
         </div>
       </div>
     </div>
@@ -154,8 +155,8 @@
         </div>
         <div class="col-lg-12">
           <div class="owl-courses-item owl-carousel">
+            {% for pop in popular %}
             <div class="item">
-              {% for pop in popular %}
               <img src="{{ pop.photo.url }}" alt="Course One">
               <div class="down-content">
                 <h4>{{ pop.title }}</h4>
@@ -176,8 +177,8 @@
                   </div>
                 </div>
               </div>
-              {% endfor %}
             </div>
+            {% endfor %}
           </div>
         </div>
       </div>
